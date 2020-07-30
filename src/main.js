@@ -5,6 +5,13 @@ import DefaultLayout from '~/layouts/Default.vue'
 import Vuetify from "vuetify";
 import VueMq from "vue-mq";
 import Vuex from "vuex";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+    faFacebookSquare,
+    faTwitter,
+    faInstagram,
+} from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import "vuetify/dist/vuetify.min.css";
 import "@mdi/font/css/materialdesignicons.css";
 
@@ -18,6 +25,9 @@ const vuetifyOptions = {
     },
 };
 
+// Add fontawesome icons
+library.add(faFacebookSquare, faTwitter, faInstagram);
+
 export default function (Vue, { router, head, isClient, appOptions }) {
     Vue.use(Vuetify);
     Vue.use(VueMq, {
@@ -25,11 +35,13 @@ export default function (Vue, { router, head, isClient, appOptions }) {
             xs: 414,
             sm: 567,
             md: 768,
-            lg: 997,
+            lg: 992,
             xl: 1200,
             xxl: Infinity,
         }
     });
+    // Instantiate the component
+    Vue.component("FontAwesome", FontAwesomeIcon);
 
     Vue.use(Vuex);
 
