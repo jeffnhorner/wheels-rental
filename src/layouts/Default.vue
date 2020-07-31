@@ -1,17 +1,17 @@
 <template>
-  <VApp>
-      <Header />
-      <slot />
-      <Footer />
-  </VApp>
+    <VApp v-bind:class="$style.app">
+        <Header />
+        <slot />
+        <Footer />
+    </VApp>
 </template>
 
 <static-query>
-query {
-  metadata {
-    siteName
-  }
-}
+    query {
+        metadata {
+            siteName
+        }
+    }
 </static-query>
 
 <script>
@@ -23,6 +23,8 @@ query {
     }
 </script>
 
-<style>
-
+<style lang="css" module>
+    .app div {
+        font-familY: 'Poppins', sans-serif;
+    }
 </style>

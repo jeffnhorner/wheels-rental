@@ -45,6 +45,29 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
     Vue.use(Vuex);
 
+    // Instantiate a new vuex store
+    appOptions.store = new Vuex.Store({
+        state: {
+            rentalCheckoutStep: 1,
+            userData: {},
+            userResetRentalCheckoutFlow: false,
+        },
+
+        mutations: {
+            updateRentalCheckoutStep (state, step) {
+                state.rentalCheckoutStep = step;
+            },
+
+            setUserData (state, userData) {
+                state.userData = { ...state.userData, ...userData };
+            },
+
+            userResetRentalCheckoutFlow(state, hasBeenReset) {
+                state.userResetRentalCheckoutFlow = hasBeenReset;
+            }
+        },
+    });
+
     // Set default layout as a global component
     Vue.component('Layout', DefaultLayout)
     appOptions.vuetify = new Vuetify(vuetifyOptions);
