@@ -29,16 +29,35 @@
 </template>
 
 <script>
-    export default {
-        components: {
-            RentalStep1: () => import('~/components/RentalStep1'),
-            RentalStep2: () => import('~/components/RentalStep2'),
-        },
+    import Vue from 'vue';
 
+    export default {
         computed: {
             rentalCheckoutStep () {
                 return this.$store.state.rentalCheckoutStep;
             },
+        },
+
+        beforeCreate () {
+            // Dynamically import all Rental Steps so we don't have to list them out in the
+            // components object above.
+            const requireContext = require.context('~/components', true, /RentalStep.*\.vue$/);
+
+            const dynamicComponents = requireContext.keys()
+                .map(file =>
+                    [file.replace(/(^.\/)|(\.vue$)/g, ''), requireContext(file)]
+                )
+                .reduce((components, [name, component]) => {
+                    components[name] = component.default || component
+                    return components
+                }, {});
+
+            Object.entries(dynamicComponents).forEach(component =>
+                // import the Rental Steps
+                Vue.component(`${component[0]}`, () => import(`~/components/${component[0]}`)));
+
+            console.log(this.$store.state.userData);
+            console.log(process.env.GRIDSOME_GOOGLE_MAP_API_KEY);
         }
     }
 </script>
@@ -59,13 +78,13 @@
     .backgroundImageLeft {
         left: 0;
         position: absolute;
-        bottom: 7rem;
+        bottom: 8.25rem;
     }
 
     .backgroundImageRight {
         position: absolute;
         right: 0;
-        bottom: 5.5rem;
+        bottom: 6.75rem;
     }
 
     .bikeImgLeft,
@@ -75,11 +94,11 @@
     }
 
     .bikeImgLeft {
-        top: 3rem;
+        top: 3.25rem;
     }
 
     .bikeImgRight {
-        top: 3.5rem;
+        top: 5rem;
     }
 
     .imagesLeft {

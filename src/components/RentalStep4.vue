@@ -3,21 +3,20 @@
         <p v-bind:class="$style.prompt">Please enter your phone number. We’ll use this to send you updates about your rental.</p>
         <div v-bind:class="$style.topWrapper">
             <VTextField
-                v-model="phone"
+                v-model="email"
                 v-bind:class="$style.input"
-                placeholder="Phone Number *"
+                placeholder="Email Address *"
                 color="#973376"
                 background-color="#fff"
                 height="4rem"
+                type="email"
                 filled
                 outlined
                 rounded
                 hide-details
                 v-on:input="checkValidations"
                 v-bind:rules="[
-                    value => !validations.phone || (value || '').length !== 10
-                        ? 'Please enter a 10 digit phone number'
-                        : true
+                    value => !validations.email || !email.length ? 'Please enter a valid email' : true
                 ]"
             />
         </div>
@@ -44,51 +43,47 @@
 <script>
     export default {
         data: () => ({
+            email: '',
             failedValidation: false,
-            phone: '',
             validations: {
-                phone: false,
+                email: false,
             },
         }),
 
         created () {
-            // New regex to test if the entered phone number is numbers only
-            this.checkForNumbersOnly = new RegExp('^[0-9]+$');
-
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
+            console.log(this.$store.state.userResetRentalCheckoutFlow);
             if (this.$store.state.userResetRentalCheckoutFlow) {
-                this.phone = this.$store.state.userData.phone;
+                this.email = this.$store.state.userData.email;
 
                 // Does it pass validation?
-                this.validations.phone = Boolean(this.checkForNumbersOnly.test(this.phone) && this.phone.length === 10);
+                this.validations.email = this.email.length;
             }
         },
 
         methods: {
             checkValidations () {
-                // Has the user passed validation?
-                this.validations.phone = Boolean(this.checkForNumbersOnly.test(this.phone) && this.phone.length === 10);
+                this.validations.email =
+                    // Ensure there's a @ symbol
+                    this.email.includes('@')
+                    // Ensure a proper email host is entered
+                    && this.email.split('@')[1].includes('.')
+                    // Ensure the email host is longer than 1 character (i.e. co, com, org, io, etc)
+                    && this.email.split('@')[1].split('.')[1].length > 1;
 
                 // Check if validation has failed
-                this.failedValidation = Boolean(!this.validations.phone);
+                this.failedValidation = Boolean(!this.validations.email);
             },
 
             nextStep () {
                 // Check if validation has failed
-                this.failedValidation = Boolean(!this.validations.phone);
-
-                try {
-                    // this is where we'll make the request to wheels endpoint and where we'll
-                    // receive an order token/id for the order completion
-                } catch (error) {
-                    console.log(error);
-                }
+                this.failedValidation = Boolean(!this.validations.email);
 
                 if (!this.failedValidation) {
                     // store the user data in the store
                     this.$store.commit('setUserData', {
-                        phone: this.phone,
+                        email: this.email,
                     });
 
                     // Move to the next step

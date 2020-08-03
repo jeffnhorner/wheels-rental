@@ -12,6 +12,7 @@
                 filled
                 outlined
                 rounded
+                hide-details
                 v-on:input="checkValidations"
                 v-bind:rules="[value => !value.length ? 'Required' : true]"
             />
@@ -25,6 +26,7 @@
                 filled
                 outlined
                 rounded
+                hide-details
                 v-on:input="checkValidations"
                 v-bind:rules="[value => !value.length ? 'Required' : true]"
             />
@@ -41,10 +43,10 @@
             Get Started
         </VBtn>
         <p
-            v-if="failedToProceed"
+            v-if="failedValidation"
             v-bind:class="$style.error"
         >
-            Please fill out the required fields *
+            Please fill out your first and last name.
         </p>
     </div>
 </template>
@@ -52,7 +54,7 @@
 <script>
     export default {
         data: () => ({
-            failedToProceed: false,
+            failedValidation: false,
             firstName: '',
             lastName: '',
             validations: {
@@ -62,24 +64,36 @@
         }),
 
         created () {
+            console.log(this.$store.state.userData);
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
             if (this.$store.state.userResetRentalCheckoutFlow) {
                 const { firstName, lastName } = this.$store.state.userData;
 
                 this.firstName = firstName;
-                this.validations.firstName = Boolean(firstName);
                 this.lastName = lastName;
-                this.validations.lastName = Boolean(lastName);
+
+                // Does it pass validation?
+                this.validations.firstName = this.firstName.length;
+                this.validations.lastName = this.lastName.length;
             }
 
-            // Use object destructions to see if there are fname or lname passed from rental landing page
-            const { fname, lname } = this.$route.query;
+            this.hasParameters = Object.keys(this.$route.query).length;
 
-            // If either fname or lname are defined, update the reactive data key values
-            if (fname || lname) {
-                this.firstName = fname;
-                this.lastName = lname;
+            if (this.hasParameters && !this.$store.state.userResetRentalCheckoutFlow) {
+                // Use object destructions to see if there are fname or lname passed from rental landing page
+                // NOTE: these parameter key names may change
+                const { fname, lname } = this.$route.query;
+
+                // If either fname or lname are defined, update the reactive data key values and check
+                // if it passes validation?
+                if (fname || lname) {
+                    this.firstName = fname;
+                    this.lastName = lname;
+
+                    this.validations.firstName = this.firstName.length;
+                    this.validations.lastName = this.lastName.length;
+                }
             }
         },
 
@@ -87,18 +101,28 @@
             checkValidations () {
                 this.validations.firstName = Boolean(this.firstName.length);
                 this.validations.lastName = Boolean(this.lastName.length);
+
+                this.failedValidation = Boolean(!this.validations.firstName || !this.validations.lastName)
             },
 
             nextStep () {
-                this.failedToProceed = Boolean(!this.validations.firstName || !this.validations.lastName);
+                this.failedValidation = Boolean(!this.validations.firstName || !this.validations.lastName)
 
-                if (!this.failedToProceed) {
+                if (!this.failedValidation) {
                     this.$store.commit('setUserData', {
                         firstName: this.firstName,
                         lastName: this.lastName,
                     });
 
+                    // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                    // If paramters exist, clear them out
+                    if (this.hasParameters) {
+                        this.$router.push({
+                            query: {},
+                        });
+                    }
                 }
             }
         }
@@ -111,13 +135,13 @@
         flex-direction: column;
         margin: 0 auto;
         position: relative;
-        width: 42rem;
+        width: 45rem;
         z-index: 20;
     }
 
     .prompt {
         font-weight: 600;
-        font-size: 2rem;
+        font-size: 2.1rem;
         text-align: center;
     }
 
@@ -125,6 +149,10 @@
         display: flex;
         margin: 2rem auto 0;
         width: 30rem;
+    }
+
+    .input:global(.v-text-field.v-text-field--enclosed) {
+        margin-bottom: 2.25rem;
     }
 
     .inputLeft:global(.v-text-field.v-text-field--enclosed) {
@@ -148,7 +176,6 @@
     .btn {
         background-color: #e1b426;
         border-color: transparent;
-        border-radius: 50px;
         height: 5rem;
         margin: 0 auto;
         width: 17rem;

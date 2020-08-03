@@ -6,7 +6,7 @@
         <div v-bind:class="$style.rightLogoWrapper">
             <g-image
                 src="~/assets/resetLogo.png"
-                v-on:click="resetCheckRentalFlow"
+                v-on:click="resetRentalCheckoutFlow"
             />
             <g-image src="~/assets/question.png" />
         </div>
@@ -16,7 +16,7 @@
 <script>
     export default {
         methods: {
-            resetCheckRentalFlow () {
+            resetRentalCheckoutFlow () {
                 this.$store.commit('updateRentalCheckoutStep', 1);
                 this.$store.commit('userResetRentalCheckoutFlow', true);
             }
