@@ -78,7 +78,6 @@
         created () {
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
-            console.log(this.$store.state.userResetRentalCheckoutFlow);
             if (this.$store.state.userResetRentalCheckoutFlow) {
                 this.email = this.$store.state.userData.email;
 
