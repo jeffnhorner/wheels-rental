@@ -14,7 +14,7 @@ module.exports = {
                 use: [
                     "vue-style-loader",
                     "css-loader",
-                ]
+                ],
             }
         ]
     }

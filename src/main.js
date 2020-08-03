@@ -12,6 +12,7 @@ import {
     faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import * as VueGoogleMaps from 'vue2-google-maps';
 import "vuetify/dist/vuetify.min.css";
 import "@mdi/font/css/materialdesignicons.css";
 
@@ -40,10 +41,47 @@ export default function (Vue, { router, head, isClient, appOptions }) {
             xxl: Infinity,
         }
     });
+    Vue.use(VueGoogleMaps, {
+        load: {
+            key: process.env.GRIDSOME_GOOGLE_MAP_API_KEY,
+            libraries: 'places,geometry'
+        },
+        installComponents: true,
+    });
+    console.log(VueGoogleMaps);
+    Vue.use(Vuex);
+
     // Instantiate the component
     Vue.component("FontAwesome", FontAwesomeIcon);
 
-    Vue.use(Vuex);
+    // Instantiate a new vuex store
+    appOptions.store = new Vuex.Store({
+        state: {
+            rentalCheckoutStep: 1,
+            userData: {},
+            userResetRentalCheckoutFlow: false,
+        },
+
+        mutations: {
+            updateRentalCheckoutStep (state, step) {
+                state.rentalCheckoutStep = step;
+            },
+
+            setUserData (state, userData) {
+                state.userData = { ...state.userData, ...userData };
+            },
+
+            userResetRentalCheckoutFlow(state, hasBeenReset) {
+                if (state.verificationCode) {
+                    // If the user resets the checkout flow, they must
+                    // request a new verification code?
+                    state.verificationCode = null;
+                }
+
+                state.userResetRentalCheckoutFlow = hasBeenReset;
+            }
+        },
+    });
 
     // Set default layout as a global component
     Vue.component('Layout', DefaultLayout)
