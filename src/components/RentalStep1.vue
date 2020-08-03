@@ -64,7 +64,6 @@
         }),
 
         created () {
-            console.log(this.$store.state.userData);
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
             if (this.$store.state.userResetRentalCheckoutFlow) {

@@ -48,7 +48,6 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         },
         installComponents: true,
     });
-    console.log(VueGoogleMaps);
     Vue.use(Vuex);
 
     // Instantiate the component
@@ -68,17 +67,18 @@ export default function (Vue, { router, head, isClient, appOptions }) {
             },
 
             setUserData (state, userData) {
+                // Spread the current state's userData with any new userData
                 state.userData = { ...state.userData, ...userData };
             },
 
-            userResetRentalCheckoutFlow(state, hasBeenReset) {
+            userResetRentalCheckoutFlow(state, userInitiatedRestart) {
                 if (state.verificationCode) {
-                    // If the user resets the checkout flow, they must
+                    // TODO: If the user resets the checkout flow, they must
                     // request a new verification code?
                     state.verificationCode = null;
                 }
 
-                state.userResetRentalCheckoutFlow = hasBeenReset;
+                state.userResetRentalCheckoutFlow = userInitiatedRestart;
             }
         },
     });

@@ -167,6 +167,7 @@
 
     .mapContainer :global(.vue-map) {
         border-radius: 20px;
+        border: 2px solid lightgrey;
     }
 
     .wrapper {
@@ -205,13 +206,16 @@
         height: 4rem;
         background: #fff;
         border-radius: 50px;
-        border: 2px solid grey;
+        border: 1px solid lightgrey;
         padding-left: 3.5rem;
         width: 75%;
     }
 
     .autocomplete:focus {
+        border: 2px solid #973376;
+        caret-color: #973376;
         outline: none;
+        padding-left: 3.45rem;
     }
 
     .inputLeft {
@@ -239,6 +243,7 @@
     .autocomplete,
     .input :global(.v-text-field__slot) input::placeholder,
     .autocomplete::placeholder {
+        color: #aeaeae;
         font-size: 1.25rem;
     }
 

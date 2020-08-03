@@ -39,8 +39,9 @@
         },
 
         beforeCreate () {
-            // Dynamically import all Rental Steps so we don't have to list them out in the
-            // components object above.
+            // Dynamically import all Rental Steps so we don't have to keep up with how many
+            // component steps we have. This will scale if we need to modify/add/remove steps at
+            // any time.
             const requireContext = require.context('~/components', true, /RentalStep.*\.vue$/);
 
             const dynamicComponents = requireContext.keys()
@@ -53,11 +54,8 @@
                 }, {});
 
             Object.entries(dynamicComponents).forEach(component =>
-                // import the Rental Steps
+                // Dynamially import & instantiate the Rental Step components
                 Vue.component(`${component[0]}`, () => import(`~/components/${component[0]}`)));
-
-            console.log(this.$store.state.userData);
-            console.log(process.env.GRIDSOME_GOOGLE_MAP_API_KEY);
         }
     }
 </script>
