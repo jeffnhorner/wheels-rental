@@ -82,6 +82,14 @@
             },
 
             getVerficationCode (isResendingCode = false) {
+                if (isResendingCode) {
+                    // reset the verification code v-model
+                    this.verificationCode = ['', '', '', '', '', '']
+
+                    // Focus the first text field
+                    this.$refs.textField[0].focus();
+                }
+
                 try {
                     // this is where we'll make the request to wheels endpoint
                     // we'll also handle logic to support if they user needs to resend the code
