@@ -9,7 +9,7 @@
                         [$style.imageContainerActive] : isActivePrivatePlan,
                     },
                 ]"
-                v-on:click="isSelectedRentalType('private')"
+                v-on:click="selectedRentalType('private')"
             >
                 <g-image
                     v-bind:class="$style.image"
@@ -29,7 +29,7 @@
                         [$style.imageContainerActive] : isActiveDeliveryPlan,
                     },
                 ]"
-                v-on:click="isSelectedRentalType('delivery')"
+                v-on:click="selectedRentalType('delivery')"
             >
                 <g-image
                     v-bind:class="$style.image"
@@ -54,53 +54,22 @@
         >
             Next
         </VBtn>
-        <p
-            v-if="failedValidation"
-            v-bind:class="$style.error"
-        >
-            Please select a bike rental type.
-        </p>
     </div>
 </template>
 
 <script>
     export default {
         data: () => ({
-            bikeRentalType: '',
-            failedValidation: false,
-            isActivePrivatePlan: false,
+            bikeRentalType: 'private',
+            isActivePrivatePlan: true,
             isActiveDeliveryPlan: false,
-            validations: {
-                bikeRentalType: false,
-            },
         }),
-
-        created () {
-            // If the user reset the checkout flow, we can assume we've store some state to prefill
-            // some of the fields
-            if (this.$store.state.userResetRentalCheckoutFlow) {
-                this.email = this.$store.state.userData.email;
-
-                // Does it pass validation?
-                this.validations.email = this.email.length;
-            }
-        },
 
         methods: {
             /**
-             * Ensure the user has completed the step
-             */
-            checkValidations (bikeRentalType) {
-                this.validations.bikeRentalType = bikeRentalType;
-
-                // Check if validation has failed
-                this.failedValidation = Boolean(!this.validations.bikeRentalType.length);
-            },
-
-            /**
              * Determines what bike rental type the user selected
              */
-            isSelectedRentalType (bikeRentalType) {
+            selectedRentalType (bikeRentalType) {
                 if (bikeRentalType === 'private') {
                     this.isActiveDeliveryPlan = false;
                     this.isActivePrivatePlan = true;
@@ -110,25 +79,19 @@
                 }
 
                 this.bikeRentalType = bikeRentalType;
-                this.checkValidations(bikeRentalType);
             },
 
             /**
              * Proceeds the user to the next step
              */
             nextStep () {
-                // Check if validation has failed
-                this.failedValidation = Boolean(!this.validations.bikeRentalType.length);
+                // store the user data in the store
+                this.$store.commit('setUserData', {
+                    bikeRentalType: this.bikeRentalType,
+                });
 
-                if (!this.failedValidation) {
-                    // store the user data in the store
-                    this.$store.commit('setUserData', {
-                        bikeRentalType: this.bikeRentalType,
-                    });
-
-                    // Move to the next step
-                    this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
-                }
+                // Move to the next step
+                this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
             }
         }
     }
@@ -200,18 +163,23 @@
         appearance: none;
         /* background-color only for content */
         background-clip: content-box;
-        border: 2px solid #e7e6e7;
+        border: 3px solid #e7e6e7;
         border-radius: 50%;
         /* create custom radiobutton appearance */
         display: inline-block;
-        height: 35px;
-        padding: 6px;
-        width: 35px;
+        height: 37px;
+        margin-bottom: 1rem;
+        padding: 5px;
+        width: 37px;
     }
 
-        /* appearance for checked radiobutton */
+    /* appearance for checked radiobutton */
     input[type="radio"]:checked {
-        background-color: #973376;
+        background-color: #bf2a60;
+    }
+
+    input[type="radio"]:focus {
+        outline: none;
     }
 
     .btn {

@@ -1,5 +1,10 @@
 <template>
-    <div v-bind:class="$style.container">
+    <div v-bind:class="[
+        $style.container,
+        {
+            [$style.containerWithActiveMap] : validations.address,
+        },
+    ]">
         <p v-bind:class="$style.prompt">Hey {{ firstName }}! What address should we deliver your bike to?</p>
         <div v-bind:class="$style.wrapper">
             <div
@@ -7,18 +12,24 @@
                 v-bind:class="$style.mapContainer"
             >
                 <GmapMap
-                    ref="map"
                     v-bind:options="mapOptions"
-                    v-bind:zoom="16"
+                    v-bind:zoom="17"
                     v-bind:center="{
                         lat: location.latitude,
                         lng: location.longitude,
                     }"
                     v-bind:style="{
                         width: '100%',
-                        height: '225px',
+                        height: '280px',
                     }"
-                />
+                >
+                    <GmapMarker
+                        v-bind:position="{
+                            lat: location.latitude,
+                            lng: location.longitude,
+                        }"
+                    />
+                </GmapMap>
             </div>
             <div v-bind:class="$style.topWrapper">
                 <g-image
@@ -26,13 +37,22 @@
                     src="~/assets/mapIcon.png"
                 />
                 <GmapAutocomplete
-                    v-bind:class="[$style.input, $style.inputLeft, $style.autocomplete]"
+                    ref="autocomplete"
+                    v-bind:class="[
+                        $style.inputLeft,
+                        $style.autocomplete,
+                        {
+                            [$style.hoverStateBorder] : addVuetifyLikeBorderStyle
+                        },
+                    ]"
                     placeholder="Street Address, City, State"
-                    v-on:place_changed="updateLocation"
+                    v-on:place_changed="setLocation"
+                    v-on:mouseenter="addVuetifyLikeBorderStyle = true"
+                    v-on:mouseleave="addVuetifyLikeBorderStyle = false"
                 />
                 <VTextField
-                    v-model="optionalAddress"
-                    v-bind:class="[$style.input, $style.inputRight]"
+                    v-model="optionalAddressUnit"
+                    v-bind:class="$style.inputRight"
                     placeholder="Apt/Unit #"
                     color="#973376"
                     background-color="#fff"
@@ -51,7 +71,7 @@
             filled
             outlined
             rounded
-            v-on:click="nextStep(Boolean(hasRetrievedMap))"
+            v-on:click="nextStep"
         >
             Get Started
         </VBtn>
@@ -67,22 +87,26 @@
 <script>
     export default {
         data: () => ({
-            address: '',
+            addVuetifyLikeBorderStyle: false,
+            enteredAddress: '',
             failedValidation: false,
             location: {
                 latitude: null,
                 longitude: null,
             },
             mapOptions: {
+                clickableIcons: false,
+                disableDefaultUI: true,
+                draggable: false,
+                fullscreenControl: false,
                 mapTypeControl: false,
-                disabaleDefaultUi: true,
-                fullScreenControl: false,
-                streeViewControl: false,
+                rotateControl: false,
+                streetViewControl: false,
+                zoomControl: false,
             },
-            optionalAddress: '',
+            optionalAddressUnit: '',
             validations: {
                 address: false,
-                optionalAddress: false,
             },
         }),
 
@@ -96,50 +120,24 @@
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
             if (this.$store.state.userResetRentalCheckoutFlow) {
-                const { address, optionalAddress } = this.$store.state.userData;
+                const { address, optionalAddressUnit } = this.$store.state.userData;
 
                 this.address = address;
-                this.optionalAddress = optionalAddress;
+                this.optionalAddressUnit = optionalAddressUnit;
 
                 // Does it pass validation?
                 this.validations.address = this.address.length;
-                this.validations.optionalAddress = this.optionalAddress.length;
-            }
-
-            this.hasParameters = Object.keys(this.$route.query).length;
-
-            if (this.hasParameters && !this.$store.state.userResetRentalCheckoutFlow) {
-                // Use object destructions to see if there are fname or lname passed from rental landing page
-                // NOTE: these parameter key names may change
-                const { fname, lname } = this.$route.query;
-
-                // If either fname or lname are defined, update the reactive data key values and check
-                // if it passes validation?
-                if (fname || lname) {
-                    this.address = fname;
-                    this.optionalAddress = lname;
-
-                    this.validations.address = this.address.length;
-                    this.validations.optionalAddress = this.optionalAddress.length;
-                }
             }
         },
 
         methods: {
-            checkValidations () {
-                this.validations.address = Boolean(this.address.length);
-                this.validations.optionalAddress = Boolean(this.optionalAddress.length);
-
-                this.failedValidation = Boolean(!this.validations.address || !this.validations.optionalAddress)
-            },
-
-            nextStep (isRetrievingMap) {
-                this.failedValidation = Boolean(!this.validations.address || !this.validations.optionalAddress)
+            nextStep () {
+                this.failedValidation = Boolean(!this.validations.address)
 
                 if (!this.failedValidation) {
                     this.$store.commit('setUserData', {
-                        address: this.address,
-                        optionalAddress: this.optionalAddress,
+                        address: this.validations.address,
+                        ...(this.optionalAddressUnit?.length ? { optionalAddressUnit: this.optionalAddressUnit } : {}),
                     });
 
                     // Move to the next step
@@ -147,10 +145,14 @@
                 }
             },
 
-            updateLocation (result) {
+            setLocation (result) {
+                console.log(result)
+                this.validations.address = result.formatted_address || '';
+                this.failedValidation = Boolean(!this.validations.address)
+
                 this.location.latitude = result.geometry.location.lat();
                 this.location.longitude = result.geometry.location.lng();
-            }
+            },
         }
     }
 </script>
@@ -161,8 +163,17 @@
         flex-direction: column;
         margin: 0 auto;
         position: relative;
-        width: 42rem;
+        width: 42.5%;
+        max-width: 50rem;
         z-index: 20;
+    }
+
+    .container > p {
+        line-height: 2.5rem;
+    }
+
+    .containerWithActiveMap {
+        margin-top: -4rem;
     }
 
     .mapContainer :global(.vue-map) {
@@ -173,7 +184,6 @@
     .wrapper {
         display: flex;
         flex-direction: column;
-        width: 42rem;
     }
 
     .prompt {
@@ -198,7 +208,7 @@
         z-index: 10;
     }
 
-    .input:global(.v-text-field.v-text-field--enclosed) {
+    .inputRight:global(.v-text-field.v-text-field--enclosed) {
         margin-bottom: 2.25rem;
     }
 
@@ -206,7 +216,8 @@
         height: 4rem;
         background: #fff;
         border-radius: 50px;
-        border: 1px solid lightgrey;
+        border: 1px solid rgba(0, 0, 0, .4);
+        transition: .2s ease-in-out;
         padding-left: 3.5rem;
         width: 75%;
     }
@@ -234,21 +245,29 @@
         margin-left: .5rem;
     }
 
-    .input,
+    .inputRight,
     .btn {
         border-radius: 50px;
     }
 
-    .input :global(.v-text-field__slot) input,
+    .inputRight :global(.v-text-field__slot) input,
     .autocomplete,
-    .input :global(.v-text-field__slot) input::placeholder,
+    .inputRight :global(.v-text-field__slot) input::placeholder,
+    .autocomplete::placeholder {
+        font-size: 1.25rem;
+    }
+
+    .inputRight :global(.v-text-field__slot) input::placeholder,
     .autocomplete::placeholder {
         color: #aeaeae;
-        font-size: 1.25rem;
     }
 
     .inputLeft :global(.v-text-field__slot) input {
         padding-left: 2rem;
+    }
+
+    .hoverStateBorder {
+        border-color: black;
     }
 
     .btn {
