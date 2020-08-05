@@ -3,32 +3,46 @@
         <p v-bind:class="$style.prompt">Great, choose your rental plan.</p>
         <div v-bind:class="$style.topWrapper">
             <template v-for="plan in plans">
-                <div
-                    v-bind:key="plan.type"
-                    v-bind:class="[
-                        $style.imageContainer,
-                        {
-                            [$style.imageContainerActive] : determineActiveFlag(plan.type),
-                        },
-                    ]"
-                    v-on:click="selectedPlan(plan.type)"
-                >
-                    <p v-bind:class="$style.planTitle">
-                        {{ plan.type === 'threeMonth'
-                            ? '3 Month'
-                            : (plan.type === 'oneMonth' ? '1 Month' : 'Weekly')
-                        }} Plan
+                <span v-bind:class="$style.plan">
+                    <p
+                        v-bind:class="[
+                            $style.highlight,
+                            {
+                                [$style.highlightActive] : determineActiveFlag(plan.type)
+                            },
+                        ]"
+                    >
+                        {{ plan.isBestValue ? 'Best Value' : (plan.isMostPopular ? 'Most Popular' : '')}}
                     </p>
-                    <p v-bind:class="$style.price">${{ plan.price.toFixed(2) }}</p>
-                    <p v-bind:class="$style.dayRate">${{ plan.dayRate.toFixed(2) }} / day</p>
-                    <input
-                        v-bind:class="$style.radio"
-                        type="radio"
-                        v-bind:checked="determineActiveFlag(plan.type)"
-                    />
-                </div>
+                    <div
+                        v-bind:key="plan.type"
+                        v-bind:class="[
+                            $style.imageContainer,
+                            {
+                                [$style.imageContainerActive] : determineActiveFlag(plan.type),
+                            },
+                        ]"
+                        v-on:click="selectedPlan(plan.type)"
+                    >
+                        <p v-bind:class="$style.planTitle">
+                            {{ plan.type === 'threeMonth'
+                                ? '3 Month'
+                                : (plan.type === 'oneMonth' ? '1 Month' : 'Weekly')
+                            }} Plan
+                        </p>
+                        <p v-bind:class="$style.price">${{ plan.price.toFixed(2) }}</p>
+                        <p v-bind:class="$style.dayRate">${{ plan.dayRate.toFixed(2) }} / day</p>
+                        <input
+                            v-bind:class="$style.radio"
+                            type="radio"
+                            v-bind:checked="determineActiveFlag(plan.type)"
+                        />
+                    </div>
+                </span>
             </template>
         </div>
+        <p v-bind:class="$style.infoTop">Unlimed Rides. Charger & lock included.</p>
+        <p v-bind:class="$style.infoBottom">Wheels will charge a $25 security deposit. It will be refunded after your bike is returned in the same condition, ordinary wear and tear excluded.</p>
         <VBtn
             v-bind:class="$style.btn"
             height="5rem"
@@ -46,6 +60,7 @@
 <script>
     export default {
         data: () => ({
+            bikeRentalPlan: null,
             isActiveThreeMonthPlan: false,
             isActiveOneMonthPlan: true,
             isActiveWeeklyPlan: false,
@@ -73,9 +88,6 @@
                     isMostPopular: 0,
                 },
             ],
-            validations: {
-                bikeRentalPlan: false,
-            },
         }),
 
         created () {
@@ -84,7 +96,11 @@
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
             if (this.$store.state.userResetRentalCheckoutFlow) {
-                this.email = this.$store.state.userData.email;
+                this.isActiveThreeMonthPlan = Boolean(this.$store.state.userData.bikeRentalPlan?.type === 'threeMonth');
+                this.isActiveOneMonthPlan = Boolean(this.$store.state.userData.bikeRentalPlan?.type === 'oneMonth');
+                this.isActiveWeeklyPlan = Boolean(this.$store.state.userData.bikeRentalPlan?.type === 'weekly');
+
+                console.log(this.bikeRentalPlan);
             }
         },
 
@@ -125,7 +141,7 @@
                     this.isActiveWeeklyPlan = true
                 }
 
-                this.validations.bikeRentalPlan = this.plans.find(({ type }) => type === bikeRentalType);
+                this.bikeRentalPlan = this.plans.find(({ type }) => type === bikeRentalPlan);
             },
 
             /**
@@ -134,7 +150,7 @@
             nextStep () {
                 // store the user data in the store
                 this.$store.commit('setUserData', {
-                    bikeRentalType: this.bikeRentalType,
+                    bikeRentalPlan: this.bikeRentalPlan,
                 });
 
                 // Move to the next step
@@ -150,19 +166,39 @@
         flex-direction: column;
         margin: 0 auto;
         position: relative;
-        width: 55rem;
         z-index: 20;
     }
 
-    .prompt {
+    p.highlight {
+        color: #c2c2c2;
+        font-size: 1.15rem;
+        margin-bottom: -.5rem;
+        text-transform: uppercase;
+    }
+
+    p.highlightActive {
+        color: #973376;
+        font-size: 1.4rem;
+    }
+
+    p.prompt {
         font-weight: 600;
-        font-size: 2.1rem;
+        font-size: 2.5rem;
+        margin-bottom: -.5rem;
         text-align: center;
     }
 
     .topWrapper {
         display: flex;
         margin: 2rem auto 0;
+    }
+
+    .plan {
+        display: flex;
+        height: 20rem;
+        justify-content: flex-end;
+        flex-direction: column;
+        text-align: center;
     }
 
     .imageContainer {
@@ -222,17 +258,8 @@
         opacity: 1;
     }
 
-    .imageContainer:nth-of-type(1) {
-        margin-right: 1rem;
-    }
-
-    .imageContainer:nth-of-type(2) {
-        margin-left: .5rem;
-        margin-right: .5rem;
-    }
-
-    .imageContainer:nth-of-type(3) {
-        margin-left: 1rem;
+    .imageContainer {
+        margin: 1rem;
     }
 
     .image {
@@ -266,12 +293,25 @@
         outline: none;
     }
 
+    .infoTop {
+        font-size: 2rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .infoBottom {
+        max-width: 46rem;
+        margin: 0 auto;
+        text-align: center;
+        width: 100%;
+    }
+
     .btn {
         background-color: #e1b426;
         border-color: transparent;
         border-radius: 50px;
         height: 5rem;
-        margin: 0 auto;
+        margin: 1rem auto 0;
         width: 17rem;
     }
 

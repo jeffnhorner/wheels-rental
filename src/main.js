@@ -48,7 +48,6 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         },
         installComponents: true,
     });
-    console.log(VueGoogleMaps);
     Vue.use(Vuex);
 
     // Instantiate the component

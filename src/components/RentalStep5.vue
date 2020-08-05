@@ -65,6 +65,16 @@
             isActiveDeliveryPlan: false,
         }),
 
+        created () {
+            if (this.$store.state.userResetRentalCheckoutFlow) {
+                console.log(this.$store.state.userData.bikeRentalType, 'created');
+                this.bikeRentalType = this.$store.state.userData.bikeRentalType;
+
+                this.isActivePrivatePlan = Boolean(this.$store.state.userData.bikeRentalType === 'private');
+                this.isActiveDeliveryPlan = Boolean(this.$store.state.userData.bikeRentalType === 'delivery');
+            }
+        },
+
         methods: {
             /**
              * Determines what bike rental type the user selected
@@ -109,7 +119,7 @@
 
     .prompt {
         font-weight: 600;
-        font-size: 2.1rem;
+        font-size: 2.5rem;
         text-align: center;
     }
 
@@ -139,10 +149,6 @@
         opacity: 1;
     }
 
-    .imageContainerActive input[type="radio"] {
-        border: 2px solid #973376;
-    }
-
     .imageContainer:nth-of-type(1) {
         margin-right: 1rem;
     }
@@ -168,7 +174,7 @@
         /* create custom radiobutton appearance */
         display: inline-block;
         height: 37px;
-        margin-bottom: 1rem;
+        margin-bottom: 0;
         padding: 5px;
         width: 37px;
     }
