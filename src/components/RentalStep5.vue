@@ -66,8 +66,8 @@
         }),
 
         created () {
-            if (this.$store.state.userResetRentalCheckoutFlow) {
-                console.log(this.$store.state.userData.bikeRentalType, 'created');
+            // If the user has already selected a bike rental plan
+            if (this.$store.state.userData?.bikeRentalType) {
                 this.bikeRentalType = this.$store.state.userData.bikeRentalType;
 
                 this.isActivePrivatePlan = Boolean(this.$store.state.userData.bikeRentalType === 'private');
@@ -92,7 +92,7 @@
             },
 
             /**
-             * Proceeds the user to the next step
+             * Proceed to the next checkout rental step
              */
             nextStep () {
                 // store the user data in the store
@@ -102,6 +102,9 @@
 
                 // Move to the next step
                 this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                // Push the next step into the window history
+                window.history.pushState({ step: 6}, null, '#step=6');
             }
         }
     }
@@ -111,7 +114,7 @@
     .container {
         display: flex;
         flex-direction: column;
-        margin: 0 auto;
+        margin: -5rem auto 0;
         position: relative;
         width: 50rem;
         z-index: 20;
@@ -129,10 +132,10 @@
     }
 
     .imageContainer {
+        background: #fff;
         border: 3px solid #c2c2c2;
         border-radius: 50px;
         margin-bottom: 2.25rem;
-        opacity: .4;
         padding: 2rem 1.25rem 1rem;
         text-align: center;
     }
@@ -141,12 +144,16 @@
         font-size: 1.5rem;
         font-weight: 700;
         letter-spacing: -.025rem;
+        opacity: .4;
+    }
+
+    .imageContainerActive p {
+        opacity: 1;
     }
 
     .imageContainerActive {
-        border: 3px solid #973376;
+        border: 3px solid #c5235c;
         box-shadow: 5px 5px 10px #d5d5d5;
-        opacity: 1;
     }
 
     .imageContainer:nth-of-type(1) {
@@ -159,19 +166,21 @@
 
     .image {
         height: 12.5rem;
+        opacity: .4;
         width: auto;
     }
 
+    .imageContainerActive .image {
+        opacity: 1;
+    }
+
     input[type="radio"] {
-        /* remove standard background appearance */
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-        /* background-color only for content */
         background-clip: content-box;
         border: 3px solid #e7e6e7;
         border-radius: 50%;
-        /* create custom radiobutton appearance */
         display: inline-block;
         height: 37px;
         margin-bottom: 0;
@@ -179,7 +188,6 @@
         width: 37px;
     }
 
-    /* appearance for checked radiobutton */
     input[type="radio"]:checked {
         background-color: #bf2a60;
     }
@@ -193,19 +201,12 @@
         border-color: transparent;
         border-radius: 50px;
         height: 5rem;
-        margin: 0 auto;
+        margin: 1rem auto 0;
         width: 17rem;
     }
 
     .btn span {
         color: #fff;
         font-size: 1.75rem;
-    }
-
-    .error {
-        color: #ff5252;
-        font-size: .75rem;
-        margin-top: 1.5rem;
-        text-align: center;
     }
 </style>

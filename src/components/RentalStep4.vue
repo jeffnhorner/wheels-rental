@@ -1,12 +1,12 @@
 <template>
     <div v-bind:class="$style.container">
-        <p v-bind:class="$style.prompt">Please enter your phone number. We’ll use this to send you updates about your rental.</p>
+        <p v-bind:class="$style.prompt">What is your email address? We'll use it to email your receipt.</p>
         <div v-bind:class="$style.topWrapper">
             <VTextField
                 v-model="email"
                 v-bind:class="$style.input"
                 placeholder="Email Address *"
-                color="#973376"
+                color="#c5235c"
                 background-color="#fff"
                 height="4rem"
                 type="email"
@@ -35,7 +35,7 @@
             v-if="failedValidation"
             v-bind:class="$style.error"
         >
-            Please fill out the required fields *
+            Please enter a valid email address.
         </p>
     </div>
 </template>
@@ -53,7 +53,7 @@
         created () {
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
-            if (this.$store.state.userResetRentalCheckoutFlow) {
+            if (this.$store.state.userData?.email) {
                 this.email = this.$store.state.userData.email;
 
                 // Does it pass validation?
@@ -62,6 +62,9 @@
         },
 
         methods: {
+            /**
+             * Ensure fields are validated
+             */
             checkValidations () {
                 this.validations.email =
                     // Ensure there's a @ symbol
@@ -75,6 +78,9 @@
                 this.failedValidation = Boolean(!this.validations.email);
             },
 
+            /**
+             * Proceed to the next checkout rental step
+             */
             nextStep () {
                 // Check if validation has failed
                 this.failedValidation = Boolean(!this.validations.email);
@@ -87,6 +93,9 @@
 
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                    /// Push the next step into the window history
+                    window.history.pushState({ step: 5 }, null, '#step=5');
                 }
             }
         }
@@ -105,7 +114,7 @@
 
     .prompt {
         font-weight: 600;
-        font-size: 2.1rem;
+        font-size: 2.25rem;
         text-align: center;
     }
 
