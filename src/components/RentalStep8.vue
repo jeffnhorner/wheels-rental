@@ -171,7 +171,7 @@
             },
 
             /**
-             * Generate a single token by converting the entered payment infomration via Stripe's API
+             * Generate a single token by converting the entered payment information via Stripe's API
              */
             createStripePaymentToken (event) {
                 this.Stripe.createToken(this.stripeCardElement, {
