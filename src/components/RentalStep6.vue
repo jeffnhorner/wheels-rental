@@ -37,7 +37,6 @@
                     src="~/assets/mapIcon.png"
                 />
                 <GmapAutocomplete
-                    ref="autocomplete"
                     v-bind:class="[
                         $style.inputLeft,
                         $style.autocomplete,
@@ -54,7 +53,7 @@
                     v-model="optionalAddressUnit"
                     v-bind:class="$style.inputRight"
                     placeholder="Apt/Unit #"
-                    color="#973376"
+                    color="#c5235c"
                     background-color="#fff"
                     height="4rem"
                     filled
@@ -73,7 +72,7 @@
             rounded
             v-on:click="nextStep"
         >
-            Get Started
+            Next
         </VBtn>
         <p
             v-if="failedValidation"
@@ -88,7 +87,6 @@
     export default {
         data: () => ({
             addVuetifyLikeBorderStyle: false,
-            enteredAddress: '',
             failedValidation: false,
             location: {
                 latitude: null,
@@ -116,23 +114,25 @@
             },
         },
 
-        created () {
-            // If the user reset the checkout flow, we can assume we've store some state to prefill
-            // some of the fields
-            if (this.$store.state.userResetRentalCheckoutFlow) {
-                const { address, optionalAddressUnit } = this.$store.state.userData;
-
-                this.address = address;
-                this.optionalAddressUnit = optionalAddressUnit;
-
-                // Does it pass validation?
-                this.validations.address = this.address.length;
-            }
-        },
-
         methods: {
-            nextStep () {
+            /**
+             * Set the location data
+             */
+            setLocation (result) {
+                this.validations.address = result.formatted_address || '';
                 this.failedValidation = Boolean(!this.validations.address)
+
+                this.location.latitude = result.geometry.location.lat();
+                this.location.longitude = result.geometry.location.lng();
+
+                // TODO: this is where we'll request plans to see if the address is eligible
+            },
+
+            /**
+             * Proceed to the next checkout rental step
+             */
+            nextStep () {
+                this.failedValidation = Boolean(!this.validations.address.length)
 
                 if (!this.failedValidation) {
                     this.$store.commit('setUserData', {
@@ -142,16 +142,10 @@
 
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                    // Push the next step into the window history
+                    window.history.pushState({ step: 7 }, null, '#step=7');
                 }
-            },
-
-            setLocation (result) {
-                console.log(result)
-                this.validations.address = result.formatted_address || '';
-                this.failedValidation = Boolean(!this.validations.address)
-
-                this.location.latitude = result.geometry.location.lat();
-                this.location.longitude = result.geometry.location.lng();
             },
         }
     }
@@ -223,8 +217,8 @@
     }
 
     .autocomplete:focus {
-        border: 2px solid #973376;
-        caret-color: #973376;
+        border: 2px solid #c5235c;
+        caret-color: #c5235c;
         outline: none;
         padding-left: 3.45rem;
     }

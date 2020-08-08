@@ -10,7 +10,7 @@
                 v-bind:autofocus="index === 0"
                 v-bind:class="$style.input"
                 maxLength="1"
-                color="#973376"
+                color="#c5235c"
                 background-color="#fff"
                 height="4rem"
                 filled
@@ -65,6 +65,9 @@
         },
 
         methods: {
+            /**
+             * Ensure fields are validated
+             */
             checkValidations (position) {
                 // Autofocus the next text field for user experience
                 position !== 5 ? this.$refs.textField[position + 1].focus() : null;
@@ -81,6 +84,9 @@
                 this.failedValidation = Boolean(!this.validations.verificationCode);
             },
 
+            /**
+             * Retrieve phone verification code
+             */
             getVerficationCode (isResendingCode = false) {
                 if (isResendingCode) {
                     // reset the verification code v-model
@@ -98,6 +104,9 @@
                 }
             },
 
+            /**
+             * Proceed to the next checkout rental step
+             */
             nextStep () {
                 // Check if validation has failed
                 this.failedValidation = Boolean(!this.validations.verificationCode);
@@ -112,6 +121,9 @@
 
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                    // Push the next step into the window history
+                    window.history.pushState({ step: 4 }, null, '#step=4');
                 }
             }
         },
@@ -146,7 +158,7 @@
 
     :global(.theme--light.v-text-field>.v-input__control>.v-input__slot:before) {
         border: none;
-        border-bottom: .25rem solid #973376;
+        border-bottom: .25rem solid #c5235c;
     }
 
     .input,

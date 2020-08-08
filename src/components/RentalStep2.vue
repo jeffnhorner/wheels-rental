@@ -6,7 +6,7 @@
                 v-model="phone"
                 v-bind:class="$style.input"
                 placeholder="Phone Number *"
-                color="#973376"
+                color="#c5235c"
                 background-color="#fff"
                 height="4rem"
                 filled
@@ -36,7 +36,7 @@
             v-if="failedValidation"
             v-bind:class="$style.error"
         >
-            Please fill out the required fields *
+            Please enter a valid phone number (i.e. 1112223333)
         </p>
     </div>
 </template>
@@ -57,7 +57,7 @@
 
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
-            if (this.$store.state.userResetRentalCheckoutFlow) {
+            if (this.$store.state.userData?.phone) {
                 this.phone = this.$store.state.userData.phone;
 
                 // Does it pass validation?
@@ -66,6 +66,9 @@
         },
 
         methods: {
+            /**
+             * Ensure fields are validated
+             */
             checkValidations () {
                 // Has the user passed validation?
                 this.validations.phone = Boolean(this.checkForNumbersOnly.test(this.phone) && this.phone.length === 10);
@@ -74,6 +77,9 @@
                 this.failedValidation = Boolean(!this.validations.phone);
             },
 
+            /**
+             * Proceed to the next checkout rental step
+             */
             nextStep () {
                 // Check if validation has failed
                 this.failedValidation = Boolean(!this.validations.phone);
@@ -93,6 +99,9 @@
 
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                    // Push the next step into the window history
+                    window.history.pushState({ step: 3 }, null, '#step=3');
                 }
             }
         }

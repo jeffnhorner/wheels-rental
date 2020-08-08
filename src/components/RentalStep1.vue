@@ -6,7 +6,7 @@
                 v-model="firstName"
                 v-bind:class="[$style.input, $style.inputLeft]"
                 placeholder="First Name *"
-                color="#973376"
+                color="#c5235c"
                 background-color="#fff"
                 height="4rem"
                 filled
@@ -20,7 +20,7 @@
                 v-model="lastName"
                 v-bind:class="[$style.input, $style.inputRight]"
                 placeholder="Last Name *"
-                color="#973376"
+                color="#c5235c"
                 background-color="#fff"
                 height="4rem"
                 filled
@@ -64,9 +64,16 @@
         }),
 
         created () {
+            // If no step is present in the URL params or if a user refreshes the page
+            // while on a different step
+            if (!this.$route.query?.step || this.$route.query?.step !== 1) {
+                // Push the step into the window history
+                window.history.pushState({ step: 1 }, null, '#step=1');
+            }
+
             // If the user reset the checkout flow, we can assume we've store some state to prefill
             // some of the fields
-            if (this.$store.state.userResetRentalCheckoutFlow) {
+            if (this.$store.state.userData?.firstName && this.$store.state.userData?.lastName) {
                 const { firstName, lastName } = this.$store.state.userData;
 
                 this.firstName = firstName;
@@ -97,6 +104,9 @@
         },
 
         methods: {
+            /**
+             * Ensure fields are validated
+             */
             checkValidations () {
                 this.validations.firstName = Boolean(this.firstName.length);
                 this.validations.lastName = Boolean(this.lastName.length);
@@ -104,6 +114,9 @@
                 this.failedValidation = Boolean(!this.validations.firstName || !this.validations.lastName)
             },
 
+            /**
+             * Proceed to the next checkout rental step
+             */
             nextStep () {
                 this.failedValidation = Boolean(!this.validations.firstName || !this.validations.lastName)
 
@@ -115,6 +128,9 @@
 
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
+
+                    // Push the next step into the window history
+                    window.history.pushState({ step: 2 }, null, '#step=2');
 
                     // If paramters exist, clear them out
                     if (this.hasParameters) {

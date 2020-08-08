@@ -56,6 +56,24 @@
             Object.entries(dynamicComponents).forEach(component =>
                 // Dynamially import & instantiate the Rental Step components
                 Vue.component(`${component[0]}`, () => import(`~/components/${component[0]}`)));
+        },
+
+        created () {
+            // Add popstate event listen to allow users to use back/forward browser buttons
+            window.addEventListener('popstate', event => this.onPopstate(event));
+        },
+
+        methods: {
+            /**
+             * Logic for whent he browser buttons are clicked
+             */
+            onPopstate (event) {
+                // If a step is present in the window history state
+                if (event.state?.step) {
+                    // Update the rental checkout step based upon the window history state
+                    this.$store.commit('updateRentalCheckoutStep', event.state.step);
+                }
+            }
         }
     }
 </script>

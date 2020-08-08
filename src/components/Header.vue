@@ -33,7 +33,8 @@
         padding: 2.5rem;
         position: fixed;
         width: 100%;
-        z-index: 15;
+        /* This ensures the header is above Stripe elements */
+        z-index: 100;
     }
 
     .rightLogoWrapper {

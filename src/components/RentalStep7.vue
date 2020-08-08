@@ -3,12 +3,15 @@
         <p v-bind:class="$style.prompt">Great, choose your rental plan.</p>
         <div v-bind:class="$style.topWrapper">
             <template v-for="plan in plans">
-                <span v-bind:class="$style.plan">
+                <span
+                    v-bind:key="plan.type"
+                    v-bind:class="$style.plan"
+                >
                     <p
                         v-bind:class="[
                             $style.highlight,
                             {
-                                [$style.highlightActive] : determineActiveFlag(plan.type)
+                                [$style.highlightActive] : determineActiveFlag(plan.type),
                             },
                         ]"
                     >
@@ -60,7 +63,13 @@
 <script>
     export default {
         data: () => ({
-            bikeRentalPlan: null,
+            bikeRentalPlan: {
+                type: 'oneMonth',
+                price: 99.99,
+                dayRate: 3.33,
+                isBestValue: 0,
+                isMostPopular: 1,
+            },
             isActiveThreeMonthPlan: false,
             isActiveOneMonthPlan: true,
             isActiveWeeklyPlan: false,
@@ -91,16 +100,11 @@
         }),
 
         created () {
-            console.log(this.$store.state.userData);
-            //TODO: we'll need to fetchThePlans on component load
-            // If the user reset the checkout flow, we can assume we've store some state to prefill
-            // some of the fields
-            if (this.$store.state.userResetRentalCheckoutFlow) {
+            // If the user has already selected a bike rental plan
+            if (this.$store.state.userData?.bikeRentalPlan) {
                 this.isActiveThreeMonthPlan = Boolean(this.$store.state.userData.bikeRentalPlan?.type === 'threeMonth');
                 this.isActiveOneMonthPlan = Boolean(this.$store.state.userData.bikeRentalPlan?.type === 'oneMonth');
                 this.isActiveWeeklyPlan = Boolean(this.$store.state.userData.bikeRentalPlan?.type === 'weekly');
-
-                console.log(this.bikeRentalPlan);
             }
         },
 
@@ -145,7 +149,7 @@
             },
 
             /**
-             * Proceeds the user to the next step
+             * Proceed to the next checkout rental step
              */
             nextStep () {
                 // store the user data in the store
@@ -155,7 +159,10 @@
 
                 // Move to the next step
                 this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
-            }
+
+                // Push the next step into the window history
+                window.history.pushState({ step: 8 }, null, '#step=8');
+            },
         }
     }
 </script>
@@ -164,7 +171,7 @@
     .container {
         display: flex;
         flex-direction: column;
-        margin: 0 auto;
+        margin: -6rem auto 0;
         position: relative;
         z-index: 20;
     }
@@ -177,7 +184,7 @@
     }
 
     p.highlightActive {
-        color: #973376;
+        color: #c5235c;
         font-size: 1.4rem;
     }
 
@@ -243,13 +250,13 @@
     }
 
     .imageContainerActive {
-        border: 3px solid #973376;
+        border: 3px solid #c5235c;
         box-shadow: 1px 1px #d5d5d5;
         opacity: 1;
     }
 
     .imageContainerActive .planTitle {
-        background: linear-gradient(to left, #705392, #973376);
+        background: linear-gradient(to left, #705392, #c5235c);
         opacity: 1;
     }
 
@@ -268,15 +275,12 @@
     }
 
     input[type="radio"] {
-        /* remove standard background appearance */
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-        /* background-color only for content */
         background-clip: content-box;
         border: 3px solid #e7e6e7;
         border-radius: 50%;
-        /* create custom radiobutton appearance */
         display: inline-block;
         height: 37px;
         margin-bottom: .5rem;
@@ -284,7 +288,6 @@
         width: 37px;
     }
 
-    /* appearance for checked radiobutton */
     input[type="radio"]:checked {
         background-color: #bf2a60;
     }
@@ -318,12 +321,5 @@
     .btn span {
         color: #fff;
         font-size: 1.75rem;
-    }
-
-    .error {
-        color: #ff5252;
-        font-size: .75rem;
-        margin-top: 1.5rem;
-        text-align: center;
     }
 </style>
