@@ -74,7 +74,7 @@
             rounded
             v-on:click="nextStep"
         >
-            Pay {{ determineButtonText($store.state.userData.bikeRentalPlan ? $store.state.userData.bikeRentalPlan : bikeRentalPlan) }}
+            Pay {{ determineButtonText(bikeRentalPlan || $store.state.userData.bikeRentalPlan) }}
         </VBtn>
     </div>
 </template>
