@@ -41,7 +41,7 @@
                 v-model="name"
                 v-bind:class="$style.vuetifyInput"
                 color="#c5235c"
-                height="4rem"
+                v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                 placeholder="Name on Card"
                 rounded
                 outlined
@@ -52,7 +52,7 @@
                 v-model="countryOrRegion"
                 v-bind:class="$style.vuetifyInput"
                 color="#c5235c"
-                height="4rem"
+                v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                 placeholder="Country / Region"
                 rounded
                 outlined
@@ -63,7 +63,7 @@
                 v-model="zipCode"
                 v-bind:class="$style.vuetifyInput"
                 color="#c5235c"
-                height="4rem"
+                v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                 placeholder="Zip Code"
                 rounded
                 outlined
@@ -72,7 +72,7 @@
             />
             <VBtn
                 v-bind:class="$style.btn"
-                height="5rem"
+                v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
                 background-color="#fff"
                 filled
                 outlined
@@ -105,6 +105,12 @@
             token: null,
             zipCode: '',
         }),
+
+        computed: {
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
+        },
 
         async created () {
             // Lazy load stripe library
@@ -157,14 +163,14 @@
             stripeElementsStyles () {
                 return {
                     base: {
-                        fontSize: '1.35rem',
+                        fontSize: this.isTabletOrMobile ? '1.1rem' : '1.35rem',
                         fontFamily: 'Poppins',
                         fontWeight: '100',
                         letterSpacing: '1px',
-                        lineHeight: '4.5rem',
+                        lineHeight: this.isTabletOrMobile ? '3.75rem' : '4.5rem',
                         '::placeholder': {
                             color: '#aeaeae',
-                            fontSize: '1.35rem',
+                            fontSize: this.isTabletOrMobile ? '1.1rem' : '1.35rem',
                         }
                     }
                 };
@@ -216,9 +222,7 @@
                         });
 
                         // Track step 8
-                        this.$mixpanel.track('step 8', {
-                            bikeRentalPlan: this.bikeRentalPlan,
-                        });
+                        this.$mixpanel.track('step 8');
 
                         // Move to the next step
                         this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
@@ -350,5 +354,39 @@
         font-size: .75rem;
         margin-top: 1.5rem;
         text-align: center;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            margin-top: -2rem;
+        }
+
+        .customStripeInput {
+            height: 3.5rem;
+        }
+
+        .vuetifyInput :global(.v-text-field__slot) input,
+        .inputRvuetifyInputight :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
+
+        .btn {
+            margin-bottom: 2rem;
+        }
     }
 </style>

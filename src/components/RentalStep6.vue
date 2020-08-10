@@ -55,7 +55,7 @@
                     placeholder="Apt/Unit #"
                     color="#c5235c"
                     background-color="#fff"
-                    height="4rem"
+                    v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                     filled
                     outlined
                     rounded
@@ -65,7 +65,7 @@
             </div>
         <VBtn
             v-bind:class="$style.btn"
-            height="5rem"
+            v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
             background-color="#fff"
             filled
             outlined
@@ -112,6 +112,10 @@
             firstName () {
                 return this.$store.state.userData.firstName;
             },
+
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
         },
 
         methods: {
@@ -147,7 +151,7 @@
                     });
 
                     // Associate the new user profile with the mixpanel distinct id.
-                    // This must be called everytime mixpanel.people.set is used.
+                    // This must be called everytime mixpanel.people.* is used.
                     // NOTE: this may be updated with unique ID from wheels?
                     this.$mixpanel.identify(this.$mixpanel_unique_id);
 
@@ -201,8 +205,9 @@
         font-weight: 600;
         font-size: 2.1rem;
         align-self: center;
+        max-width: 40rem;
         text-align: center;
-        width: 40rem;
+        width: 100%;
     }
 
     .topWrapper {
@@ -284,7 +289,6 @@
     .btn {
         background-color: #e1b426;
         border-color: transparent;
-        height: 5rem;
         margin: 0 auto;
         width: 17rem;
     }
@@ -299,5 +303,78 @@
         font-size: .75rem;
         margin-top: 1.5rem;
         text-align: center;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            width: 60%;
+        }
+
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .topWrapper {
+            flex-direction: column;
+        }
+
+        .inputLeft,
+        .inputRight {
+            width: 100%;
+        }
+
+        .autocomplete {
+            height: 3.5rem;
+        }
+
+        .icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 1rem;
+            z-index: 10;
+        }
+
+        .inputLeft {
+            margin-bottom: 1.25rem;
+        }
+
+        .inputRight:global(.v-text-field.v-text-field--enclosed) {
+            margin-bottom: 2.25rem;
+        }
+
+        .inputRight :global(.v-text-field__slot) input,
+        .autocomplete,
+        .inputRight :global(.v-text-field__slot) input::placeholder,
+        .autocomplete::placeholder {
+            font-size: 1rem;
+        }
+
+        .inputLeft:global(.v-text-field.v-text-field--enclosed) {
+            margin-right: 0;
+        }
+
+        .inputRight:global(.v-text-field.v-text-field--enclosed) {
+            margin-left: 0;
+        }
+
+        .btn {
+            margin-bottom: 2rem;
+        }
     }
 </style>

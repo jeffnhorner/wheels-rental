@@ -3,6 +3,7 @@
         <div v-bind:class="$style.wrapper">
             <div v-bind:class="$style.imagesLeft">
                 <g-image
+                    v-if="isTabletOrMobile"
                     v-bind:class="$style.bikeImgLeft"
                     src="~/assets/wheelsBikeLeft.png"
                 />
@@ -12,9 +13,13 @@
                 />
             </div>
             <component
+                v-bind:class="$style.dynamicComponentWrapper"
                 v-bind:is="'RentalStep' + rentalCheckoutStep"
              />
-            <div v-bind:class="$style.imagesRight">
+            <div
+                v-if="isTabletOrMobile"
+                v-bind:class="$style.imagesRight"
+            >
                 <g-image
                     v-bind:class="$style.bikeImgRight"
                     src="~/assets/wheelsBikeRight.png"
@@ -36,6 +41,10 @@
             rentalCheckoutStep () {
                 return this.$store.state.rentalCheckoutStep;
             },
+
+            isTabletOrMobile () {
+                return this.$mq !== 'md' && this.$mq !== 'sm' && this.$mq !== 'xs';
+            }
         },
 
         beforeCreate () {
@@ -125,5 +134,52 @@
     .imagesRight {
         position: absolute;
         right: 0;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .bikeImgLeft,
+        .bikeImgRight {
+            max-width: 26rem;
+        }
+
+        .backgroundImageLeft {
+            left: -15rem;
+            bottom: 3rem;
+        }
+
+        .backgroundImageRight {
+            right: -15rem;
+            bottom: 2.75rem;
+        }
+    }
+
+    @media only screen and (max-width: 967px) {
+        .bikeImgLeft,
+        .bikeImgRight {
+            max-width: 20rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            margin-bottom: 0;
+        }
+
+        .wrapper {
+            margin-top: 10rem;
+        }
+
+        .dynamicComponentWrapper {
+            padding: 0 1rem;
+        }
+
+        .imagesLeft,
+        .imagesRight {
+            position: relative;
+        }
+
+        .backgroundImageLeft {
+            left: 0;
+        }
     }
 </style>

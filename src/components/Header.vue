@@ -1,6 +1,7 @@
 <template>
     <div v-bind:class="$style.container">
         <g-image
+            v-bind:class="$style.wheelsLogo"
             src="~/assets/wheelsLogo.png"
         />
         <div v-bind:class="$style.rightLogoWrapper">
@@ -44,5 +45,22 @@
 
     .rightLogoWrapper img {
         margin-left: 1.5rem;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            padding: 1.5rem;
+        }
+        .wheelsLogo {
+            align-self: center;
+            height: 1.5rem;
+            width: auto;
+        }
+
+        .rightLogoWrapper img {
+            height: 1.3rem;
+            margin-left: 1rem;
+            width: auto;
+        }
     }
 </style>

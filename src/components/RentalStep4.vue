@@ -8,7 +8,7 @@
                 placeholder="Email Address *"
                 color="#c5235c"
                 background-color="#fff"
-                height="4rem"
+                v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                 type="email"
                 filled
                 outlined
@@ -22,7 +22,7 @@
         </div>
         <VBtn
             v-bind:class="$style.btn"
-            height="5rem"
+            v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
             background-color="#fff"
             filled
             outlined
@@ -49,6 +49,12 @@
                 email: false,
             },
         }),
+
+        computed: {
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
+        },
 
         created () {
             // If the user reset the checkout flow, we can assume we've store some state to prefill
@@ -97,7 +103,7 @@
                     });
 
                     // Associate the new user profile with the mixpanel distinct id.
-                    // This must be called everytime mixpanel.people.set is used.
+                    // This must be called everytime mixpanel.people.* is used.
                     // NOTE: this may be updated with unique ID from wheels?
                     this.$mixpanel.identify(this.$mixpanel_unique_id);
 
@@ -136,7 +142,8 @@
     .topWrapper {
         display: flex;
         margin: 2rem auto 0;
-        width: 20rem;
+        max-width: 20rem;
+        width: 100%;
     }
 
     .input:global(.v-text-field.v-text-field--enclosed) {
@@ -158,7 +165,6 @@
         background-color: #e1b426;
         border-color: transparent;
         border-radius: 50px;
-        height: 5rem;
         margin: 0 auto;
         width: 17rem;
     }
@@ -173,5 +179,32 @@
         font-size: .75rem;
         margin-top: 1.5rem;
         text-align: center;
+    }
+
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            width: 30rem;
+        }
+
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .input :global(.v-text-field__slot) input,
+        .input :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
     }
 </style>

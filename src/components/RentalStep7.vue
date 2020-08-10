@@ -48,7 +48,7 @@
         <p v-bind:class="$style.infoBottom">Wheels will charge a $25 security deposit. It will be refunded after your bike is returned in the same condition, ordinary wear and tear excluded.</p>
         <VBtn
             v-bind:class="$style.btn"
-            height="5rem"
+            v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
             background-color="#fff"
             filled
             outlined
@@ -98,6 +98,12 @@
                 },
             ],
         }),
+
+        computed: {
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
+        },
 
         created () {
             // If the user has already selected a bike rental plan
@@ -157,9 +163,9 @@
                     bikeRentalPlan: this.bikeRentalPlan,
                 });
 
-                // Track step 3
+                // Track step 7 - the initial bike rental plan chosen
                 this.$mixpanel.track('step 7', {
-                    bikeRentalPlan: this.bikeRentalPlan,
+                    initialBikeRentalPlan: this.bikeRentalPlan,
                 });
 
                 // Move to the next step
@@ -326,5 +332,50 @@
     .btn span {
         color: #fff;
         font-size: 1.75rem;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            max-width: 30rem;
+            width: 100%;
+        }
+
+        .topWrapper {
+            flex-direction: column;
+        }
+
+        p.prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            margin-top: -2rem;
+        }
+
+        .infoTop {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            margin-bottom: 2rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .input :global(.v-text-field__slot) input,
+        .input :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
     }
 </style>
