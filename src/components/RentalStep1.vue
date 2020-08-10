@@ -126,6 +126,23 @@
                         lastName: this.lastName,
                     });
 
+                    // Create a user profile in mixpanel
+                    this.$mixpanel.people.set({
+                        first_name: this.firstName,
+                        last_name: this.lastName,
+                    });
+
+                    // Associate the new user profile with the mixpanel distinct id.
+                    // This must be called everytime mixpanel.people.set is used.
+                    // NOTE: this may be updated with unique ID from wheels?
+                    this.$mixpanel.identify(this.$mixpanel_unique_id);
+
+                    // Track step 1
+                    this.$mixpanel.track('step 1', {
+                        first_name: this.firstName,
+                        last_name: this.lastName,
+                    });
+
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 

@@ -215,6 +215,11 @@
                             paymentSuccessful: true,
                         });
 
+                        // Track step 8
+                        this.$mixpanel.track('step 8', {
+                            bikeRentalPlan: this.bikeRentalPlan,
+                        });
+
                         // Move to the next step
                         this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 

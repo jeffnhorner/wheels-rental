@@ -97,6 +97,21 @@
                         phone: this.phone,
                     });
 
+                    // Update the mixpanel user profile
+                    this.$mixpanel.people.set({
+                        phone: this.phone,
+                    });
+
+                    // Associate the new user profile with the mixpanel distinct id.
+                    // This must be called everytime mixpanel.people.set is used.
+                    // NOTE: this may be updated with unique ID from wheels?
+                    this.$mixpanel.identify(this.$mixpanel_unique_id);
+
+                    // Track step 2
+                    this.$mixpanel.track('step 2', {
+                        phone: this.phone,
+                    });
+
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 

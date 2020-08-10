@@ -100,6 +100,11 @@
                     bikeRentalType: this.bikeRentalType,
                 });
 
+                // Track step 5
+                this.$mixpanel.track('step 5', {
+                    bikeRentalType: this.bikeRentalType,
+                });
+
                 // Move to the next step
                 this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 
