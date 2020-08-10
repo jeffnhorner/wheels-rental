@@ -119,6 +119,9 @@
                         verificationCode: this.verificationCode.join(''),
                     });
 
+                    // Track step 3
+                    this.$mixpanel.track('step 3');
+
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 

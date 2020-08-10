@@ -26,6 +26,11 @@ const vuetifyOptions = {
     },
 };
 
+const mixpanel = require('mixpanel-browser');
+
+// Instantiate the mixpanel instance
+mixpanel.init(process.env.GRIDSOME_MIXPANEL_TOKEN);
+
 // Add fontawesome icons
 library.add(faFacebookSquare, faTwitter, faInstagram);
 
@@ -49,6 +54,14 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         installComponents: true,
     });
     Vue.use(Vuex);
+
+    //Proxy mixpanel to Vue prototype object so we can use it throughout
+    // the application.
+    Vue.prototype.$mixpanel = mixpanel;
+
+    // We need this defined globally since we can't reference $mixpanel.get_distinct_id()
+    // within components.
+    Vue.prototype.$mixpanel_unique_id = mixpanel.get_distinct_id();
 
     // Instantiate the component
     Vue.component("FontAwesome", FontAwesomeIcon);

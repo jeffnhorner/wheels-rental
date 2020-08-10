@@ -140,6 +140,23 @@
                         ...(this.optionalAddressUnit?.length ? { optionalAddressUnit: this.optionalAddressUnit } : {}),
                     });
 
+                    // Update the mixpanel user profile
+                    this.$mixpanel.people.set({
+                        address: this.validations.address,
+                        ...(this.optionalAddressUnit?.length ? { optionalAddressUnit: this.optionalAddressUnit } : {}),
+                    });
+
+                    // Associate the new user profile with the mixpanel distinct id.
+                    // This must be called everytime mixpanel.people.set is used.
+                    // NOTE: this may be updated with unique ID from wheels?
+                    this.$mixpanel.identify(this.$mixpanel_unique_id);
+
+                    // Track step 6
+                    this.$mixpanel.track('step 6', {
+                        address: this.validations.address,
+                        ...(this.optionalAddressUnit?.length ? { optionalAddressUnit: this.optionalAddressUnit } : {}),
+                    });
+
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 

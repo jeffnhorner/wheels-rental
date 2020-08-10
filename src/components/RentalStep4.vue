@@ -91,6 +91,21 @@
                         email: this.email,
                     });
 
+                    // Update the mixpanel user profile
+                    this.$mixpanel.people.set({
+                        email: this.email,
+                    });
+
+                    // Associate the new user profile with the mixpanel distinct id.
+                    // This must be called everytime mixpanel.people.set is used.
+                    // NOTE: this may be updated with unique ID from wheels?
+                    this.$mixpanel.identify(this.$mixpanel_unique_id);
+
+                    // Track step 4
+                    this.$mixpanel.track('step 4', {
+                        email: this.email,
+                    });
+
                     // Move to the next step
                     this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 

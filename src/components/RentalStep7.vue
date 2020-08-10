@@ -157,6 +157,11 @@
                     bikeRentalPlan: this.bikeRentalPlan,
                 });
 
+                // Track step 3
+                this.$mixpanel.track('step 7', {
+                    bikeRentalPlan: this.bikeRentalPlan,
+                });
+
                 // Move to the next step
                 this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
 
