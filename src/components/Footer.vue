@@ -60,6 +60,11 @@
         justify-content: space-between;
     }
 
+    .rightWrapper {
+        margin-left: 2rem;
+        text-align: right;
+    }
+
     .logo {
         width: 17rem;
     }
@@ -93,6 +98,42 @@
         .wrapper {
             max-width: 75%;
             margin: 0 auto;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .logo {
+            width: 13rem;
+        }
+    }
+
+    @media only screen and (max-width: 567px) {
+        .wrapper {
+            flex-direction: column;
+        }
+
+        .rightWrapper {
+            margin-left: 0;
+            text-align: left;
+        }
+
+        .logo {
+            width: 10rem;
+        }
+
+        .socials {
+            justify-content: flex-start;
+        }
+    }
+
+    @media only screen and (max-width: 567px) {
+        .container,
+        .rightWrapper {
+            text-align: center;
+        }
+
+        .socials {
+            justify-content: center;
         }
     }
 </style>

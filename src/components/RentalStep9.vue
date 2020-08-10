@@ -172,13 +172,21 @@
             nextStep () {
                 // store the user data in the store
                 this.$store.commit('setUserData', {
-                    bikeRentalPlan: this.bikeRentalPlan,
+                    bikeRentalPlan: this.bikeRentalPlan || this.$store.state.userData.bikeRentalPlan,
                 });
 
-                // Track step 9
+                // Track step 9 - the final bike rental plan chosen
                 this.$mixpanel.track('step 9', {
-                    bikeRentalPlan: this.bikeRentalPlan,
+                    finalBikeRentalPlan: this.bikeRentalPlan || this.$store.state.userData.bikeRentalPlan,
                 });
+
+                // Track the charge
+                this.$mixpanel.people.track_charge(this.bikeRentalPlan?.price || this.$store.state.userData.bikeRentalPlan.price);
+
+                // Associate the new user profile with the mixpanel distinct id.
+                // This must be called everytime mixpanel.people.* is used.
+                // NOTE: this may be updated with unique ID from wheels?
+                this.$mixpanel.identify(this.$mixpanel_unique_id);
 
                 // Move to the next step
                 this.$store.commit('updateRentalCheckoutStep', this.$store.state.rentalCheckoutStep + 1);
@@ -306,5 +314,50 @@
     .btn span {
         color: #fff;
         font-size: 1.75rem;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            width: 30rem;
+        }
+
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 17rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container  {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .bikePlans {
+            border: none;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .planBtn {
+            width: 100%;
+        }
+
+        .input :global(.v-text-field__slot) input,
+        .input :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
+
+        .btn {
+            margin-bottom: 2rem;
+        }
     }
 </style>

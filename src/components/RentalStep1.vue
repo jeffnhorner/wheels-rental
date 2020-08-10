@@ -8,7 +8,7 @@
                 placeholder="First Name *"
                 color="#c5235c"
                 background-color="#fff"
-                height="4rem"
+                v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                 filled
                 outlined
                 rounded
@@ -22,7 +22,7 @@
                 placeholder="Last Name *"
                 color="#c5235c"
                 background-color="#fff"
-                height="4rem"
+                v-bind:height="isTabletOrMobile ? '3rem' : '4rem'"
                 filled
                 outlined
                 rounded
@@ -33,7 +33,7 @@
         </div>
         <VBtn
             v-bind:class="$style.btn"
-            height="5rem"
+            v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
             background-color="#fff"
             filled
             outlined
@@ -62,6 +62,12 @@
                 lastName: false,
             },
         }),
+
+        computed: {
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
+        },
 
         created () {
             // If no step is present in the URL params or if a user refreshes the page
@@ -133,7 +139,7 @@
                     });
 
                     // Associate the new user profile with the mixpanel distinct id.
-                    // This must be called everytime mixpanel.people.set is used.
+                    // This must be called everytime mixpanel.people.* is used.
                     // NOTE: this may be updated with unique ID from wheels?
                     this.$mixpanel.identify(this.$mixpanel_unique_id);
 
@@ -180,7 +186,8 @@
     .topWrapper {
         display: flex;
         margin: 2rem auto 0;
-        width: 30rem;
+        max-width: 30rem;
+        width: 100%;
     }
 
     .input:global(.v-text-field.v-text-field--enclosed) {
@@ -223,5 +230,47 @@
         font-size: .75rem;
         margin-top: 1.5rem;
         text-align: center;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            width: 30rem;
+        }
+
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .topWrapper {
+            flex-direction: column;
+        }
+
+        .input:global(.v-text-field.v-text-field--enclosed) {
+            margin-bottom: 1.25rem;
+        }
+
+        .input :global(.v-text-field__slot) input,
+        .input :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
+
+        .inputLeft:global(.v-text-field.v-text-field--enclosed) {
+            margin-right: 0;
+        }
+
+        .inputRight:global(.v-text-field.v-text-field--enclosed) {
+            margin-left: 0;
+        }
     }
 </style>

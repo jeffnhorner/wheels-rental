@@ -31,7 +31,7 @@
         </VBtn>
         <VBtn
             v-bind:class="$style.nextBtn"
-            height="5rem"
+            v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
             background-color="#fff"
             filled
             outlined
@@ -58,6 +58,12 @@
             },
             verificationCode: ['', '', '', '', '', ''],
         }),
+
+        computed: {
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
+        },
 
         created () {
             // New regex to test if the entered phone number is numbers only
@@ -152,7 +158,8 @@
     .topWrapper {
         display: flex;
         margin: 2rem auto 0;
-        width: 30rem;
+        max-width: 30rem;
+        width: 100%;
     }
 
     .input:global(.v-text-field.v-text-field--enclosed) {
@@ -210,5 +217,40 @@
         font-size: .75rem;
         margin-top: 1.5rem;
         text-align: center;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            width: 30rem;
+        }
+
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .nextBtn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .nextBtn span {
+            font-size: 1.4rem;
+        }
+
+        .input div:global(.v-input__slot) {
+            /* This is necessary to remove inline styles from vuetify */
+            background-color: transparent !important;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .input :global(.v-text-field__slot) input,
+        .input :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
+
+        .resendBtn {
+            margin-bottom: 1rem;
+        }
     }
 </style>

@@ -21,6 +21,14 @@
     </div>
 </template>
 
+<script>
+    export default {
+        created () {
+            this.$mixpanel.track('step 10 (final)')
+        }
+    }
+</script>
+
 <style lang="css" module>
     .container {
         display: flex;
@@ -52,5 +60,26 @@
         align-items: center;
         display: flex;
         flex-direction: column;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .container {
+            margin-top: -4rem;
+            width: 30rem;
+        }
+
+        p.prompt {
+            font-size: 1.5rem;
+        }
+
+        p.confirmationMessage {
+            font-size: 1rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            margin-top: 0;
+        }
     }
 </style>

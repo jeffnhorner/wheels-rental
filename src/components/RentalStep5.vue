@@ -45,7 +45,7 @@
         </div>
         <VBtn
             v-bind:class="$style.btn"
-            height="5rem"
+            v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
             background-color="#fff"
             filled
             outlined
@@ -64,6 +64,12 @@
             isActivePrivatePlan: true,
             isActiveDeliveryPlan: false,
         }),
+
+        computed: {
+            isTabletOrMobile () {
+                return this.$mq === 'md' || this.$mq === 'sm' || this.$mq === 'xs';
+            }
+        },
 
         created () {
             // If the user has already selected a bike rental plan
@@ -213,5 +219,65 @@
     .btn span {
         color: #fff;
         font-size: 1.75rem;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .prompt {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            max-width: 13rem;
+            width: 100%;
+        }
+
+        .btn span {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            margin-top: 0;
+            margin-bottom: 2rem;
+        }
+
+        .image {
+            height: 10rem;
+            opacity: .4;
+            width: auto;
+        }
+
+        .imageContainer {
+            margin-bottom: 1rem;
+        }
+
+        .input :global(.v-text-field__slot) input,
+        .input :global(.v-text-field__slot) input::placeholder {
+            font-size: 1rem;
+        }
+    }
+
+    @media only screen and (max-width: 567px) {
+        .container {
+            margin-top: 0;
+            margin-bottom: 2rem;
+        }
+
+        .topWrapper {
+            flex-direction: column;
+        }
+
+        .imageContainer:nth-of-type(1) {
+            margin-right: 0;
+        }
+
+        .imageContainer:nth-of-type(2) {
+            margin-left: 0;
+        }
+
+        .image {
+            height: 7rem;
+        }
     }
 </style>
