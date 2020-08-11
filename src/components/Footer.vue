@@ -2,7 +2,7 @@
   <div v-bind:class="$style.container">
     <div v-bind:class="$style.wrapper">
       <div>
-        <g-image v-bind:class="$style.logo" src="./assets/wheelsLogo.png" />
+        <g-image v-bind:class="$style.logo" src="../assets/wheelsLogo.png" />
         <p v-bind:class="$style.copyright">
           Copyright Wheels. All Rights Reserved
         </p>

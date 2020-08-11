@@ -5,11 +5,11 @@
         <g-image
           v-if="isTabletOrMobile"
           v-bind:class="$style.bikeImgLeft"
-          src="assets/wheelsBikeLeft.png"
+          src="../assets/wheelsBikeLeft.png"
         />
         <g-image
           v-bind:class="$style.backgroundImageLeft"
-          src="assets/wheelsBackgroundLeft.png"
+          src="../assets/wheelsBackgroundLeft.png"
         />
       </div>
       <component
@@ -19,11 +19,11 @@
       <div v-if="isTabletOrMobile" v-bind:class="$style.imagesRight">
         <g-image
           v-bind:class="$style.bikeImgRight"
-          src="assets/wheelsBikeRight.png"
+          src="../assets/wheelsBikeRight.png"
         />
         <g-image
           v-bind:class="$style.backgroundImageRight"
-          src="assets/wheelsBackgroundRight.png"
+          src="../assets/wheelsBackgroundRight.png"
         />
       </div>
     </div>

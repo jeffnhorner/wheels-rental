@@ -75,9 +75,9 @@ export default {
     // while on a different step
     if (!this.$route.query?.step || this.$route.query?.step !== 1) {
       // Push the step into the window history
-      if (process.isClient) {
-        window.history.pushState({ step: 1 }, null, "#step=1");
-      }
+      // if (process.isClient) {
+      //   window.history.pushState({ step: 1 }, null, "#step=1");
+      // }
     }
 
     // If the user reset the checkout flow, we can assume we've store some state to prefill
