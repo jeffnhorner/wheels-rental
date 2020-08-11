@@ -75,6 +75,7 @@
       filled
       outlined
       rounded
+      :loading="this.loading"
       v-on:click="nextStep"
     >
       Pay
@@ -97,7 +98,7 @@ export default {
       isActiveOneMonthPlan: null,
       isActiveWeeklyPlan: null,
       isReady: false,
-
+      loading: false,
       // NOTE: temporary plans array until Wheels api is set up
       plans: [],
     };
@@ -172,7 +173,11 @@ export default {
      * Proceed to the next checkout rental step
      */
     nextStep() {
+      if (this.loading) {
+        return;
+      }
       // store the user data in the store
+      this.loading = true;
       this.$store.commit("setUserData", {
         bikeRentalPlan:
           this.bikeRentalPlan || this.$store.state.userData.bikeRentalPlan,
@@ -196,13 +201,18 @@ export default {
       this.$mixpanel.identify(this.$mixpanel_unique_id);
 
       // Move to the next step
-      this.$store.commit(
-        "updateRentalCheckoutStep",
-        this.$store.state.rentalCheckoutStep + 1
-      );
+      setTimeout(() => {
+        this.$store.commit(
+          "updateRentalCheckoutStep",
+          this.$store.state.rentalCheckoutStep + 1
+        );
+        this.loading = false;
+      }, 1000);
 
       // Push the next step into the window history
-      window.history.pushState({ step: 10 }, null, "#step=10");
+      if (process.isClient) {
+        window.history.pushState({ step: 10 }, null, "#step=10");
+      }
     },
   },
 };

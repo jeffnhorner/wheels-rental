@@ -16,6 +16,7 @@
         outlined
         rounded
         hide-details
+        :autofocus="true"
         v-on:input="checkValidations"
         v-bind:rules="[
           (value) =>
@@ -96,6 +97,7 @@ export default {
      */
     nextStep(e) {
       e.preventDefault();
+      e.stopPropagation();
       this.loading = true;
       // Check if validation has failed
       this.failedValidation = Boolean(!this.validations.phone);
@@ -155,7 +157,9 @@ export default {
           );
 
           // Push the next step into the window history
-          window.history.pushState({ step: 3 }, null, "#step=3");
+          if (process.isClient) {
+            window.history.pushState({ step: 3 }, null, "#step=3");
+          }
         })
         .finally(() => {
           this.loading = false;

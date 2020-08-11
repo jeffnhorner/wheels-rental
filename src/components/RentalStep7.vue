@@ -185,7 +185,9 @@ export default {
       );
 
       // Push the next step into the window history
-      window.history.pushState({ step: 8 }, null, "#step=8");
+      if (process.isClient) {
+        window.history.pushState({ step: 8 }, null, "#step=8");
+      }
     },
   },
 };

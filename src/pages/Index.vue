@@ -1,19 +1,20 @@
 <template>
   <Layout>
-      <RentalCheckoutContainer />
+    <RentalCheckoutContainer />
   </Layout>
 </template>
 
 <script>
 export default {
-    metaInfo: {
-        title: 'Wheels Checkout Rental'
-    },
+  metaInfo: {
+    title: "Wheels Checkout Rental",
+  },
 
-    components: {
-        RentalCheckoutContainer: () => import('~/components/RentalCheckoutContainer'),
-    },
-}
+  components: {
+    RentalCheckoutContainer: () =>
+      import("~/components/RentalCheckoutContainer"),
+  },
+};
 </script>
 
 <style>

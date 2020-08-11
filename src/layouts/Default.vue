@@ -1,9 +1,9 @@
 <template>
-    <VApp v-bind:class="$style.app">
-        <Header />
-        <slot />
-        <Footer />
-    </VApp>
+  <VApp v-bind:class="$style.app">
+    <Header />
+    <slot />
+    <Footer />
+  </VApp>
 </template>
 
 <static-query>
@@ -15,16 +15,17 @@
 </static-query>
 
 <script>
-    export default {
-        components: {
-            Header: () => import('~/components/Header'),
-            Footer: () => import('~/components/Footer'),
-        },
-    }
+import "whatwg-fetch";
+export default {
+  components: {
+    Header: () => import("~/components/Header"),
+    Footer: () => import("~/components/Footer"),
+  },
+};
 </script>
 
 <style lang="css" module>
-    .app div {
-        font-familY: 'Poppins', sans-serif;
-    }
+.app div {
+    font-familY: 'Poppins', sans-serif;
+}
 </style>

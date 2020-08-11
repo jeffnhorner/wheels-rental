@@ -5,17 +5,14 @@
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 module.exports = {
-    siteName: 'Gridsome',
-    plugins: [],
-      module: {
-        rules: [
-            {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    "vue-style-loader",
-                    "css-loader",
-                ],
-            }
-        ]
-    }
-}
+  siteName: "WheelsRentals",
+  plugins: [],
+  module: {
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: ["vue-style-loader", "css-loader"],
+      },
+    ],
+  },
+};

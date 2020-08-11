@@ -1,5 +1,5 @@
 <template>
-  <VForm v-on:submit="nextStep" v-bind:class="$style.container">
+  <VForm @submit.prevent="nextStep" v-bind:class="$style.container">
     <p v-bind:class="$style.prompt">
       Let's complete your rental. We need a bit of information to get started.
     </p>
@@ -16,6 +16,7 @@
         outlined
         rounded
         hide-details
+        :autofocus="true"
         v-on:input="checkValidations"
         v-bind:rules="[(value) => (!value.length ? 'Required' : true)]"
       />
@@ -74,7 +75,9 @@ export default {
     // while on a different step
     if (!this.$route.query?.step || this.$route.query?.step !== 1) {
       // Push the step into the window history
-      window.history.pushState({ step: 1 }, null, "#step=1");
+      if (process.isClient) {
+        window.history.pushState({ step: 1 }, null, "#step=1");
+      }
     }
 
     // If the user reset the checkout flow, we can assume we've store some state to prefill
@@ -130,6 +133,7 @@ export default {
      */
     nextStep(e) {
       e.preventDefault();
+      e.stopPropagation();
       this.failedValidation = Boolean(
         !this.validations.firstName || !this.validations.lastName
       );
@@ -164,7 +168,9 @@ export default {
         );
 
         // Push the next step into the window history
-        window.history.pushState({ step: 2 }, null, "#step=2");
+        if (process.isClient) {
+          window.history.pushState({ step: 2 }, null, "#step=2");
+        }
 
         // If paramters exist, clear them out
         if (this.hasParameters) {

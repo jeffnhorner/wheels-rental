@@ -36,7 +36,7 @@
         v-bind:rules="[(value) => (!value ? 'Required' : true)]"
         hide-details
       />
-      <VTextField
+      <!-- <VTextField
         v-model="countryOrRegion"
         v-bind:class="$style.vuetifyInput"
         color="#c5235c"
@@ -46,7 +46,7 @@
         outlined
         v-bind:rules="[(value) => (!value ? 'Required' : true)]"
         hide-details
-      />
+      /> -->
       <VTextField
         v-model="zipCode"
         v-bind:class="$style.vuetifyInput"
@@ -82,7 +82,7 @@
 <script>
 export default {
   data: () => ({
-    countryOrRegion: "",
+    countryOrRegion: "US",
     elements: [],
     isReady: false,
     failedValidation: false,
@@ -224,7 +224,9 @@ export default {
           );
 
           // Push the next step into the window history
-          window.history.pushState({ step: 9 }, null, "#step=9");
+          if (process.isClient) {
+            window.history.pushState({ step: 9 }, null, "#step=9");
+          }
         }
       } else {
         this.$store.commit("setUserData", {

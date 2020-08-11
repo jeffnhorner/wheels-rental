@@ -122,14 +122,16 @@ export default {
               phone_number: this.$store.state.userData.phone,
             },
           })
-          .always(() => (this.loadingCode = false));
+          .finally(() => (this.loadingCode = false));
       }
     },
 
     /**
      * Proceed to the next checkout rental step
      */
-    nextStep() {
+    nextStep(e) {
+      e.preventDefault();
+      e.stopPropagation();
       // Check if validation has failed
       this.failedValidation = Boolean(!this.validations.verificationCode);
       this.loading = true;
@@ -188,7 +190,9 @@ export default {
             );
 
             // Push the next step into the window history
-            window.history.pushState({ step: 4 }, null, "#step=4");
+            if (process.isClient) {
+              window.history.pushState({ step: 4 }, null, "#step=4");
+            }
           })
           .finally(() => (this.loading = false));
       }
