@@ -16,6 +16,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-context": "^1.0.20",
     "apollo-link-http": "^1.5.17",
+    "awesome-phonenumber": "^2.36.0",
     "graphql-tag": "^2.11.0",
     "gridsome": "^0.7.0",
     "mixpanel-browser": "^2.38.0",

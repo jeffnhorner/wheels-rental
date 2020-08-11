@@ -1,0 +1,7 @@
+{
+  "name": "wheels-rental",
+  "type": "static",
+  "static": {
+    "dir": "dist"
+  }
+}

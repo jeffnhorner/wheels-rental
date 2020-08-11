@@ -1,5 +1,13 @@
 <template>
-  <div v-bind:class="$style.container">
+  <div v-bind:class="$style.container" v-if="!loading && !plans.length">
+    <p v-bind:class="$style.prompt">
+      We haven't launched in your area yet
+    </p>
+    <p v-bind:class="$style.infoTop">
+      We'll message you when rentals become available in your city
+    </p>
+  </div>
+  <div v-bind:class="$style.container" v-else>
     <p v-bind:class="$style.prompt">Great, choose your rental plan.</p>
     <div v-bind:class="$style.topWrapper">
       <template v-for="plan in plans">
@@ -48,7 +56,9 @@
         </span>
       </template>
     </div>
-    <p v-bind:class="$style.infoTop">Unlimed Rides. Charger & lock included.</p>
+    <p v-bind:class="$style.infoTop">
+      Unlimed Rides. Charger & lock included.
+    </p>
     <p v-bind:class="$style.infoBottom">
       Wheels will charge a $25 security deposit. It will be refunded after your
       bike is returned in the same condition, ordinary wear and tear excluded.
@@ -71,47 +81,23 @@
 import { GET_AVAILABLE_PLANS } from "@/graphql";
 export default {
   data: () => ({
-    bikeRentalPlan: {
-      type: "oneMonth",
-      price: 99.99,
-      dayRate: 3.33,
-      isBestValue: 0,
-      isMostPopular: 1,
-    },
+    bikeRentalPlan: {},
     isActiveThreeMonthPlan: false,
     isActiveOneMonthPlan: true,
     isActiveWeeklyPlan: false,
     // NOTE: temporary plans array until Wheels api is set up
-    plans: [
-      {
-        type: "threeMonth",
-        price: 199.99,
-        dayRate: 2.2,
-        isBestValue: 1,
-        isMostPopular: 0,
-      },
-      {
-        type: "oneMonth",
-        price: 99.99,
-        dayRate: 3.33,
-        isBestValue: 0,
-        isMostPopular: 1,
-      },
-      {
-        type: "weekly",
-        price: 34.99,
-        dayRate: 5.0,
-        isBestValue: 0,
-        isMostPopular: 0,
-      },
-    ],
+    plans: [],
+    loading: 0,
   }),
 
   apollo: {
     plans: {
       query: GET_AVAILABLE_PLANS,
-      variables: {
-        zip_code: "90042",
+      loadingKey: "loading",
+      variables(...rest) {
+        return {
+          zip_code: this.$store.state.userData.zipCode,
+        };
       },
     },
   },
@@ -359,6 +345,10 @@ input[type="radio"]:focus {
 .btn span {
     color: #fff;
     font-size: 1.75rem;
+}
+
+.not-available {
+
 }
 
 @media only screen and (max-width: 1200px) {

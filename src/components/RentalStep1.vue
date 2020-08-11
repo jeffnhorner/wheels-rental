@@ -1,8 +1,9 @@
 <template>
-  <div v-bind:class="$style.container">
+  <VForm v-on:submit="nextStep" v-bind:class="$style.container">
     <p v-bind:class="$style.prompt">
       Let's complete your rental. We need a bit of information to get started.
     </p>
+
     <div v-bind:class="$style.topWrapper">
       <VTextField
         v-model="firstName"
@@ -36,18 +37,18 @@
     <VBtn
       v-bind:class="$style.btn"
       v-bind:height="isTabletOrMobile ? '4rem' : '5rem'"
+      type="submit"
       background-color="#fff"
       filled
       outlined
       rounded
-      v-on:click="nextStep"
     >
       Get Started
     </VBtn>
     <p v-if="failedValidation" v-bind:class="$style.error">
       Please fill out your first and last name.
     </p>
-  </div>
+  </VForm>
 </template>
 
 <script>
@@ -69,7 +70,6 @@ export default {
   },
 
   created() {
-    this.getPlans();
     // If no step is present in the URL params or if a user refreshes the page
     // while on a different step
     if (!this.$route.query?.step || this.$route.query?.step !== 1) {
@@ -128,7 +128,8 @@ export default {
     /**
      * Proceed to the next checkout rental step
      */
-    nextStep() {
+    nextStep(e) {
+      e.preventDefault();
       this.failedValidation = Boolean(
         !this.validations.firstName || !this.validations.lastName
       );
