@@ -1,33 +1,35 @@
 <template>
-  <div v-bind:class="$style.container">
-    <div v-bind:class="$style.wrapper">
-      <div v-bind:class="$style.imagesLeft">
-        <g-image
-          v-if="isTabletOrMobile"
-          v-bind:class="$style.bikeImgLeft"
-          src="../assets/wheelsBikeLeft.png"
+  <ClientOnly>
+    <div v-bind:class="$style.container">
+      <div v-bind:class="$style.wrapper">
+        <div v-bind:class="$style.imagesLeft">
+          <g-image
+            v-if="isTabletOrMobile"
+            v-bind:class="$style.bikeImgLeft"
+            src="../assets/wheelsBikeLeft.png"
+          />
+          <g-image
+            v-bind:class="$style.backgroundImageLeft"
+            src="../assets/wheelsBackgroundLeft.png"
+          />
+        </div>
+        <component
+          v-bind:class="$style.dynamicComponentWrapper"
+          v-bind:is="'RentalStep' + rentalCheckoutStep"
         />
-        <g-image
-          v-bind:class="$style.backgroundImageLeft"
-          src="../assets/wheelsBackgroundLeft.png"
-        />
-      </div>
-      <component
-        v-bind:class="$style.dynamicComponentWrapper"
-        v-bind:is="'RentalStep' + rentalCheckoutStep"
-      />
-      <div v-if="isTabletOrMobile" v-bind:class="$style.imagesRight">
-        <g-image
-          v-bind:class="$style.bikeImgRight"
-          src="../assets/wheelsBikeRight.png"
-        />
-        <g-image
-          v-bind:class="$style.backgroundImageRight"
-          src="../assets/wheelsBackgroundRight.png"
-        />
+        <div v-if="isTabletOrMobile" v-bind:class="$style.imagesRight">
+          <g-image
+            v-bind:class="$style.bikeImgRight"
+            src="../assets/wheelsBikeRight.png"
+          />
+          <g-image
+            v-bind:class="$style.backgroundImageRight"
+            src="../assets/wheelsBackgroundRight.png"
+          />
+        </div>
       </div>
     </div>
-  </div>
+  </ClientOnly>
 </template>
 
 <script>

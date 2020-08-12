@@ -109,7 +109,7 @@ export default {
       this.$apollo
         .mutate({
           mutation: gql`
-            mutation TriggerPhoneNumberValidation($phone_number: String) {
+            mutation TriggerPhoneNumberValidation($phone_number: String!) {
               trigger_phone_number_validation(phone_number: $phone_number) {
                 success
                 errors {

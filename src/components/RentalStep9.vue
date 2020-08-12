@@ -90,6 +90,7 @@
 
 <script>
 import { GET_AVAILABLE_PLANS } from "@/graphql";
+import gql from "graphql-tag";
 export default {
   data() {
     return {
@@ -200,19 +201,65 @@ export default {
       // NOTE: this may be updated with unique ID from wheels?
       this.$mixpanel.identify(this.$mixpanel_unique_id);
 
-      // Move to the next step
-      setTimeout(() => {
-        this.$store.commit(
-          "updateRentalCheckoutStep",
-          this.$store.state.rentalCheckoutStep + 1
-        );
-        this.loading = false;
-      }, 1000);
+      const stateData = this.$store.state.userData;
+      const orderData = {
+        plan_id: stateData.bikeRentalPlan.id,
+        email: stateData.email,
+        first_name: stateData.firstName,
+        last_name: stateData.lastName,
+        token: stateData.stripeToken,
+        wheels_user_info: stateData.wheelsUserInfo,
+        user_id: stateData.wheelsUserInfo.id,
+      };
 
-      // Push the next step into the window history
-      if (process.isClient) {
-        window.history.pushState({ step: 10 }, null, "#step=10");
-      }
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation InsertOrderOne(
+              $email: String!
+              $first_name: String!
+              $last_name: String!
+              $plan_id: uuid!
+              $token: String!
+              $user_id: uuid!
+              $wheels_user_info: jsonb!
+            ) {
+              insert_order(
+                objects: [
+                  {
+                    email: $email
+                    first_name: $first_name
+                    last_name: $last_name
+                    plan_id: $plan_id
+                    token: $token
+                    user_id: $user_id
+                    wheels_user_info: $wheels_user_info
+                  }
+                ]
+              ) {
+                affected_rows
+              }
+            }
+          `,
+          variables: orderData,
+        })
+        .then((res) => {
+          // Move to the next step
+          this.$store.commit(
+            "updateRentalCheckoutStep",
+            this.$store.state.rentalCheckoutStep + 1
+          );
+          if (process.isClient) {
+            window.history.pushState({ step: 10 }, null, "#step=10");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Oops, something went wrong! Please try again.");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 };

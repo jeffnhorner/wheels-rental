@@ -94,10 +94,15 @@ export default {
     plans: {
       query: GET_AVAILABLE_PLANS,
       loadingKey: "loading",
-      variables(...rest) {
+      variables() {
         return {
           zip_code: this.$store.state.userData.zipCode,
         };
+      },
+      result({ data }) {
+        if (data.plans.length) {
+          this.selectedPlan(data.plans[1].type);
+        }
       },
     },
   },
@@ -111,15 +116,7 @@ export default {
   created() {
     // If the user has already selected a bike rental plan
     if (this.$store.state.userData?.bikeRentalPlan) {
-      this.isActiveThreeMonthPlan = Boolean(
-        this.$store.state.userData.bikeRentalPlan?.type === "threeMonth"
-      );
-      this.isActiveOneMonthPlan = Boolean(
-        this.$store.state.userData.bikeRentalPlan?.type === "oneMonth"
-      );
-      this.isActiveWeeklyPlan = Boolean(
-        this.$store.state.userData.bikeRentalPlan?.type === "weekly"
-      );
+      this.bikeRentalPlan = -this.$store.state.userData.bikeRentalPlan;
     }
   },
 

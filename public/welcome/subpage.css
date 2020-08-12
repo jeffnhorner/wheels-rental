@@ -1,0 +1,355 @@
+#subpage .mobile-item-only {
+  display: none;
+}
+#subpage .desk-item {
+  display: block;
+}
+#subpage input[type=submit].yellow-btn {
+  background-color: var(--site-yellow);
+  border-radius: 40px;
+  color: #FFF;
+  display: inline-block;
+  font-size: 26px;
+  margin: 40px auto;
+  padding: 20px 80px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 0;
+  cursor: pointer;
+}
+#subpage input[type=submit].yellow-btn:hover {
+  background-image: linear-gradient(47deg, #4D53A4 -10%, #CC085C 100%);
+}
+#subpage #siteHeader {
+  padding: 30px;
+  border-bottom: 1px solid #ddd;
+}
+#subpage .bike-between-hero-txt {
+  display: flex;
+  flex-wrap: wrap;
+}
+#subpage .bike-between-hero-txt > div {
+  flex: 0 0 33%;
+  max-width: 33%;
+}
+#subpage .bike-between-hero-txt > div img {
+  margin-top: 100px;
+  width: 100%;
+}
+#subpage .bike-between-hero-txt > div:first-child {
+  order: 2;
+}
+#subpage .bike-between-hero-txt > div:first-child .hero-text-wrapper {
+  position: relative;
+  left: -100px;
+  width: calc( 100% + 200px );
+  text-align: center;
+}
+#subpage .bike-between-hero-txt > div:nth-child(2) {
+  background: url(img/bike-left-bg.png) 100% -100px no-repeat transparent;
+  order: 1;
+}
+#subpage .bike-between-hero-txt > div:nth-child(3) {
+  background: url(img/bike-right-bg.png) 0 50px no-repeat transparent;
+  order: 3;
+}
+#subpage #site-footer {
+  padding: 30px 0;
+  border-top: 1px solid #DDD;
+}
+#subpage [id*=steps-] {
+  display: none;
+}
+#subpage fieldset {
+  border: none;
+}
+#subpage #step-one h2 {
+  font-size: 30px;
+  font-weight: 300;
+  margin-top: 42px;
+}
+#subpage #step-one h1 {
+  font-size: 40px;
+  margin: 62px 0 32px 0;
+}
+#subpage #step-one .packagetype-radio-holder {
+  display: flex;
+  flex-wrap: wrap;
+}
+#subpage #step-one .packagetype-radio-holder label {
+  flex: 0 0 33%;
+  max-width: 33%;
+}
+#subpage #step-one input[type=radio] {
+  text-align: center;
+  position: relative;
+  top: -5px;
+  width: 100%;
+  min-width: 260px;
+}
+#subpage #step-one input[type=radio]:after {
+  background-color: #FFF;
+  color: #d4d4d4;
+  content: " ";
+  display: inline-block;
+  font-size: 18px;
+  min-height: 20px;
+  min-width: 20px;
+}
+#subpage #step-one input[type=radio] + .radio-box {
+  background: linear-gradient(90deg, #D1D1D1 0%, #D1D1D1 100%);
+  padding: 3px;
+  border-radius: 10px 10px;
+  margin: 0 10px;
+  display: inline-block;
+  overflow: hidden;
+  box-shadow: 0 0 10px #ededed;
+  cursor: pointer;
+  min-width: 260px;
+}
+#subpage #step-one input[type=radio] + .radio-box > div {
+  background-color: #FFF;
+  overflow: hidden;
+  border-radius: 0 0 10px 10px;
+}
+#subpage #step-one input[type=radio] + div h3 {
+  background: #EBEBEB;
+  background: linear-gradient(90deg, #EBEBEB 0%, #EBEBEB 100%);
+  color: #fff;
+  padding: 25px 0;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 22px;
+}
+#subpage #step-one input[type=radio] + div strong {
+  color: #BFBFBF;
+  font-size: 66px;
+  line-height: 60px;
+  display: block;
+}
+#subpage #step-one input[type=radio] + div span {
+  font-size: 24px;
+  color: #8c8c8c;
+}
+#subpage #step-one input[type=radio] + div p {
+  font-size: 18px;
+}
+#subpage #step-one input[type=radio] + div input.btn.btn-success.next-one {
+  border-radius: 50px;
+  padding: 30px 115px;
+  border: none;
+  color: #fff;
+  font-size: 30px;
+  background-color: #E1B426;
+  margin-top: 32px;
+}
+#subpage #step-one input[type=radio] + div .circ-rad {
+  display: block;
+  margin: 10px 0;
+}
+#subpage #step-one input[type=radio] + div .circ-rad > div {
+  background-color: #FFF;
+  border: 3px solid #E9E9E9;
+  display: inline-block;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+#subpage #step-one input[type=radio] + div .circ-rad > div > span {
+  background-color: #FFF;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+#subpage #step-one input[type=radio]:checked + div.radio-box {
+  background: linear-gradient(90deg, #705392 0%, #c5235c 100%);
+  position: relative;
+  z-index: 100;
+}
+#subpage #step-one input[type=radio]:checked + div.radio-box > div {
+  background-color: #FFF;
+  overflow: hidden;
+  border-radius: 0 0 10px 10px;
+}
+#subpage #step-one input[type=radio]:checked + div.radio-box h3 {
+  background-color: #705392;
+  background: linear-gradient(90deg, #705392 0%, #c5235c 100%);
+}
+#subpage #step-one input[type=radio]:checked + div.radio-box strong {
+  color: #000;
+}
+#subpage #step-one input[type=radio]:checked + div.radio-box span {
+  color: #8c8c8c;
+}
+#subpage #step-one input[type=radio]:checked + div.radio-box .circ-rad > div > span {
+  background-color: #BF2A60;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+#subpage #step-one label:nth-child(1) input[type=radio]:after {
+  content: "BEST VALUE";
+}
+#subpage #step-one label:nth-child(2) input[type=radio]:after {
+  content: "MOST POPULAR";
+}
+#subpage #step-one input[type=radio]:checked:after {
+  color: #9d3975;
+}
+#subpage .thank-you-box {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 100px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+}
+#subpage .thank-you-box > div {
+  width: 100%;
+  display: block;
+}
+#subpage .thank-you-box > div h2 {
+  color: #9d3975;
+}
+#subpage .thank-you-box > div span#email-error {
+  display: none !important;
+}
+#subpage .thank-you-box > div input#email {
+  padding: 10px;
+  border: 1px solid #ededed;
+  margin: 20px 0;
+  border-radius: 20px;
+  text-indent: 10px;
+  width: 100%;
+}
+
+@media (max-width: 999px) {
+  #subpage {
+    overflow-x: hidden;
+  }
+  #subpage .bike-between-hero-txt > div:first-child {
+    order: 1;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  #subpage .bike-between-hero-txt > div:first-child .hero-text-wrapper {
+    left: 0px;
+    width: 100%;
+  }
+  #subpage .bike-between-hero-txt > div:first-child .hero-text-wrapper p {
+    margin: 0 20px;
+  }
+  #subpage .bike-between-hero-txt > div:nth-child(2) {
+    order: 2;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  #subpage .bike-between-hero-txt > div:nth-child(3) {
+    flex: 0 0 50%;
+    max-width: 50%;
+    background-position: 0 43px;
+  }
+  #subpage .bike-between-hero-txt #step-one div.radio-box {
+    margin: 0px;
+    width: 100%;
+    min-width: auto;
+  }
+  #subpage .bike-between-hero-txt #step-one div.radio-box strong {
+    font-size: 6vw;
+  }
+  #subpage .bike-between-hero-txt #step-one div.radio-box span {
+    font-size: 2.5vw;
+    display: block;
+  }
+  #subpage .bike-between-hero-txt #step-one h3 {
+    font-size: 2.5vw;
+  }
+  #subpage .bike-between-hero-txt #step-one input[type=radio] {
+    min-width: auto;
+  }
+}
+@media (max-width: 600px) {
+  #subpage .mobile-item-only {
+    display: block;
+  }
+  #subpage .desk-item {
+    display: none;
+  }
+  #subpage #step-one {
+    padding: 50px 0;
+  }
+  #subpage #step-one h1 {
+    font-size: 30px;
+    line-height: 40px;
+    max-width: 360px;
+    padding: 0 20px;
+    margin: 0 auto 20px;
+  }
+  #subpage #step-one h2 {
+    font-size: 18px;
+    font-weight: 400;
+    max-width: 360px;
+    padding: 0 20px;
+    margin: 0 auto;
+  }
+  #subpage #step-one label {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+  }
+  #subpage #step-one label input[type=radio] {
+    top: 0px;
+  }
+  #subpage #step-one label input[type=radio] + div h3 {
+    margin-bottom: 0px;
+    background-image: none;
+    color: #C8A1B6;
+    padding: 20px 0;
+    font-size: 13px;
+  }
+  #subpage #step-one label input[type=radio] + div strong {
+    line-height: 4vw;
+    font-size: 4vw;
+  }
+  #subpage #step-one label input[type=radio] + .radio-box {
+    background: none;
+    box-shadow: none;
+  }
+  #subpage #step-one label input[type=radio]:checked {
+    margin-bottom: 5px;
+    height: 20px;
+  }
+  #subpage #step-one label input[type=radio]:checked + div strong {
+    line-height: 60px;
+  }
+  #subpage #step-one label input[type=radio]:checked + div h3 {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 13px;
+  }
+  #subpage #step-one label input[type=radio]:after {
+    color: #C8A1B6;
+    font-size: 13px;
+  }
+  #subpage #step-one label input[type=radio]:after + .radio-box {
+    box-shadow: 0 0 10px #ededed;
+  }
+
+  #subpage .bike-between-hero-txt > div:first-child .hero-text-wrapper p {
+    max-width: 360px;
+    padding: 0 20px;
+    margin: 20px auto;
+    font-size: 12px;
+    line-height: 19px;
+  }
+
+  #subpage .bike-between-hero-txt > div:nth-child(2) {
+    background-position: 115% 70%;
+  }
+
+  #subpage .bike-between-hero-txt > div:nth-child(3) {
+    background-position: 15% 70%;
+  }
+}

@@ -108,7 +108,7 @@ export default {
         this.$apollo
           .mutate({
             mutation: gql`
-              mutation TriggerPhoneNumberValidation($phone_number: String) {
+              mutation ResendPhoneNumberValidation($phone_number: String!) {
                 trigger_phone_number_validation(phone_number: $phone_number) {
                   success
                   errors {
@@ -140,8 +140,8 @@ export default {
           .mutate({
             mutation: gql`
               mutation VerifyPhoneValidation(
-                $phone_number: String
-                $code: String
+                $phone_number: String!
+                $code: String!
               ) {
                 verify_phone_number_validation(
                   code: $code
