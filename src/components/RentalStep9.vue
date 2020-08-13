@@ -225,6 +225,8 @@ export default {
               $token: String!
               $user_id: uuid!
               $wheels_user_info: jsonb!
+              address: String!
+              address_components: jsonb!
             ) {
               insert_order(
                 objects: [
@@ -236,6 +238,8 @@ export default {
                     token: $token
                     user_id: $user_id
                     wheels_user_info: $wheels_user_info
+                    address: $address
+                    address_components: $address_components
                   }
                 ]
               ) {
