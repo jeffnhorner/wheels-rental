@@ -210,6 +210,8 @@ export default {
         token: stateData.stripeToken,
         wheels_user_info: stateData.wheelsUserInfo,
         user_id: stateData.wheelsUserInfo.id,
+        address: stateData.address,
+        address_components: stateData.addressComponents,
       };
 
       this.$apollo
