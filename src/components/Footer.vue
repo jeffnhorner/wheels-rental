@@ -7,21 +7,7 @@
           Copyright Wheels. All Rights Reserved
         </p>
       </div>
-      <div v-bind:class="$style.rightWrapper">
-        <p v-bind:class="$style.links">
-          Private Rental | Delivery Rental | Contact Us | Faq
-        </p>
-        <div v-bind:class="$style.socials">
-          <template v-for="icon in socialIcons">
-            <FontAwesome
-              v-bind:key="icon[1]"
-              v-bind:icon="[icon[0], icon[1]]"
-              v-bind:class="$style.icon"
-              size="lg"
-            />
-          </template>
-        </div>
-      </div>
+      <div v-bind:class="$style.rightWrapper"></div>
     </div>
   </div>
 </template>

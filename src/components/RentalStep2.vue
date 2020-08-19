@@ -149,6 +149,11 @@ export default {
           this.$mixpanel.track("step 2", {
             phone: formattedPhoneNumber,
           });
+          dataLayer.push({
+            event: "Completed onboarding step",
+            stepName: "Phone Number",
+            stepNumber: "2",
+          });
 
           // Move to the next step
           this.$store.commit(

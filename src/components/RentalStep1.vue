@@ -160,6 +160,11 @@ export default {
           first_name: this.firstName,
           last_name: this.lastName,
         });
+        dataLayer.push({
+          event: "Completed onboarding step",
+          stepName: "Name",
+          stepNumber: "1",
+        });
 
         // Move to the next step
         this.$store.commit(

@@ -60,8 +60,8 @@
       Unlimed Rides. Charger & lock included.
     </p>
     <p v-bind:class="$style.infoBottom">
-      Wheels will charge a $25 security deposit. It will be refunded after your
-      bike is returned in the same condition, ordinary wear and tear excluded.
+      Wheels will charge you a $99 security deposit. It will be refunded when
+      your bike is returned.
     </p>
     <VBtn
       v-bind:class="$style.btn"
@@ -97,11 +97,20 @@ export default {
       variables() {
         return {
           zip_code: this.$store.state.userData.zipCode,
+          rental_type: this.$store.state.userData.bikeRentalType,
         };
       },
       result({ data }) {
         if (data.plans.length) {
           this.selectedPlan(data.plans[1].type);
+        } else {
+          dataLayer.push({
+            event: "Out of Area",
+            zip_code: this.$store.state.userData.zipCode,
+          });
+          this.$mixpanel.track("Out of Area", {
+            zipCode: this.$store.state.userData.zipCode,
+          });
         }
       },
     },
@@ -116,7 +125,7 @@ export default {
   created() {
     // If the user has already selected a bike rental plan
     if (this.$store.state.userData?.bikeRentalPlan) {
-      this.bikeRentalPlan = -this.$store.state.userData.bikeRentalPlan;
+      this.bikeRentalPlan = this.$store.state.userData.bikeRentalPlan;
     }
   },
 
@@ -173,6 +182,14 @@ export default {
       // Track step 7 - the initial bike rental plan chosen
       this.$mixpanel.track("step 7", {
         initialBikeRentalPlan: this.bikeRentalPlan,
+      });
+      dataLayer.push({
+        event: "Completed onboarding step",
+        stepName: "Rental Plan",
+        stepNumber: "7",
+        bikeRentalPlan: this.bikeRentalPlan,
+        amount:
+          Number(this.$store.state.userData.bikeRentalPlan.amount_cents) / 100,
       });
 
       // Move to the next step

@@ -1,7 +1,7 @@
 <template>
   <div v-if="isReady" v-bind:class="$style.container">
-    <p v-bind:class="$style.prompt">Choose your payment method</p>
-    <VBtn
+    <p v-bind:class="$style.prompt">Pay With Card</p>
+    <!-- <VBtn
       v-bind:class="$style.applePayBtn"
       color="#e8627f"
       height="3.5rem"
@@ -12,9 +12,9 @@
     </VBtn>
     <div v-bind:class="$style.paymentPrompt">
       <hr />
-      <span>Or pay with card</span>
+      <span>Pay with card</span>
       <hr />
-    </div>
+    </div> -->
     <g-image v-bind:class="$style.creditCards" src="~/assets/creditcards.png" />
     <div
       v-bind:class="[
@@ -216,6 +216,11 @@ export default {
 
           // Track step 8
           this.$mixpanel.track("step 8");
+          dataLayer.push({
+            event: "Completed onboarding step",
+            stepName: "Payment information",
+            stepNumber: "8",
+          });
 
           // Move to the next step
           this.$store.commit(

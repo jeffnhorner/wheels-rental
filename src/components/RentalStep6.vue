@@ -169,6 +169,11 @@ export default {
             ? { optionalAddressUnit: this.optionalAddressUnit }
             : {}),
         });
+        dataLayer.push({
+          event: "Completed onboarding step",
+          stepName: "Address",
+          stepNumber: "6",
+        });
 
         // Move to the next step
         this.$store.commit(

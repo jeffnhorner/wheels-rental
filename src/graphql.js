@@ -1,12 +1,13 @@
 import gql from "graphql-tag";
 
 export const GET_AVAILABLE_PLANS = gql`
-  query GetAvailablePlans($zip_code: String!) {
+  query GetAvailablePlans($zip_code: String!, $rental_type: String!) {
     plans(
       where: {
         availability_zones_plans: {
           availability_zone: { zip_code: { _eq: $zip_code } }
         }
+        rental_type: { _eq: $rental_type }
       }
       order_by: { amount_cents: desc }
     ) {

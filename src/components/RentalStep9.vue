@@ -108,8 +108,11 @@ export default {
   apollo: {
     plans: {
       query: GET_AVAILABLE_PLANS,
-      variables: {
-        zip_code: "90042",
+      variables() {
+        return {
+          zip_code: this.$store.state.userData.zipCode,
+          rental_type: this.$store.state.userData.bikeRentalType,
+        };
       },
     },
   },
@@ -184,23 +187,6 @@ export default {
           this.bikeRentalPlan || this.$store.state.userData.bikeRentalPlan,
       });
 
-      // Track step 9 - the final bike rental plan chosen
-      this.$mixpanel.track("step 9", {
-        finalBikeRentalPlan:
-          this.bikeRentalPlan || this.$store.state.userData.bikeRentalPlan,
-      });
-
-      // Track the charge
-      this.$mixpanel.people.track_charge(
-        this.bikeRentalPlan?.price ||
-          this.$store.state.userData.bikeRentalPlan.price
-      );
-
-      // Associate the new user profile with the mixpanel distinct id.
-      // This must be called everytime mixpanel.people.* is used.
-      // NOTE: this may be updated with unique ID from wheels?
-      this.$mixpanel.identify(this.$mixpanel_unique_id);
-
       const stateData = this.$store.state.userData;
       const orderData = {
         plan_id: stateData.bikeRentalPlan.id,
@@ -212,6 +198,7 @@ export default {
         user_id: stateData.wheelsUserInfo.id,
         address: stateData.address,
         address_components: stateData.addressComponents,
+        bike_rental_type: stateData.bikeRentalType || "private",
       };
 
       this.$apollo
@@ -225,8 +212,9 @@ export default {
               $token: String!
               $user_id: uuid!
               $wheels_user_info: jsonb!
-              address: String!
-              address_components: jsonb!
+              $address: String!
+              $address_components: jsonb!
+              $bike_rental_type: String!
             ) {
               insert_order(
                 objects: [
@@ -240,21 +228,61 @@ export default {
                     wheels_user_info: $wheels_user_info
                     address: $address
                     address_components: $address_components
+                    bike_rental_type: $bike_rental_type
                   }
                 ]
               ) {
                 affected_rows
+                returning {
+                  id
+                }
               }
             }
           `,
           variables: orderData,
         })
         .then((res) => {
+          console.log(res);
           // Move to the next step
           this.$store.commit(
             "updateRentalCheckoutStep",
             this.$store.state.rentalCheckoutStep + 1
           );
+          this.$store.commit("setUserData", {
+            orderId: res.data.insert_order.returning[0].id,
+          });
+          // Track step 9 - the final bike rental plan chosen
+          this.$mixpanel.track("step 9", {
+            finalBikeRentalPlan:
+              this.bikeRentalPlan || this.$store.state.userData.bikeRentalPlan,
+          });
+
+          dataLayer.push({
+            event: "Completed onboarding step",
+            stepName: "Confirm",
+            stepNumber: "9",
+            bikeRentalPlan: this.$store.state.userData.bikeRentalPlan,
+          });
+
+          dataLayer.push({
+            event: "Completed Order",
+            amount:
+              Number(this.$store.state.userData.bikeRentalPlan.amount_cents) /
+              100,
+            plan_name: this.$store.state.userData.bikeRentalPlan.name,
+            bikeRentalPlan: this.$store.state.userData.bikeRentalPlan,
+          });
+
+          // Track the charge
+          this.$mixpanel.people.track_charge(
+            this.bikeRentalPlan?.price ||
+              this.$store.state.userData.bikeRentalPlan.price
+          );
+
+          // Associate the new user profile with the mixpanel distinct id.
+          // This must be called everytime mixpanel.people.* is used.
+          // NOTE: this may be updated with unique ID from wheels?
+          this.$mixpanel.identify(this.$mixpanel_unique_id);
           if (process.isClient) {
             window.history.pushState({ step: 10 }, null, "#step=10");
           }

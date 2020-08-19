@@ -115,6 +115,12 @@ export default {
         this.$mixpanel.track("step 4", {
           email: this.email,
         });
+        dataLayer.push({
+          event: "Completed onboarding step",
+          stepName: "Email",
+          stepNumber: "4",
+          email: this.email,
+        });
 
         // Move to the next step
         this.$store.commit(

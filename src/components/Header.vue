@@ -2,11 +2,12 @@
   <div v-bind:class="$style.container">
     <g-image v-bind:class="$style.wheelsLogo" src="../assets/wheelsLogo.png" />
     <div v-bind:class="$style.rightLogoWrapper">
-      <g-image
-        src="../assets/resetLogo.png"
-        v-on:click="resetRentalCheckoutFlow"
-      />
-      <g-image src="../assets/question.png" />
+      <a href="#">
+        <g-image
+          src="../assets/resetLogo.png"
+          v-on:click="resetRentalCheckoutFlow"
+        />
+      </a>
     </div>
   </div>
 </template>

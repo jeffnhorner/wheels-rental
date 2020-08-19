@@ -113,6 +113,12 @@ export default {
       this.$mixpanel.track("step 5", {
         bikeRentalType: this.bikeRentalType,
       });
+      dataLayer.push({
+        event: "Completed onboarding step",
+        stepName: "Rental Type",
+        stepNumber: "5",
+        bikeRentalType: this.bikeRentalType,
+      });
 
       // Move to the next step
       this.$store.commit(

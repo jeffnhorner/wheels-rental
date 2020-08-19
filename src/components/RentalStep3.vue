@@ -182,6 +182,11 @@ export default {
 
             // Track step 3
             this.$mixpanel.track("step 3");
+            dataLayer.push({
+              event: "Completed onboarding step",
+              stepName: "Phone Number Verification",
+              stepNumber: "3",
+            });
 
             // Move to the next step
             this.$store.commit(
