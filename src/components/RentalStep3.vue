@@ -153,6 +153,8 @@ export default {
                     first_name
                     jwt
                     last_name
+                    phone_number
+                    charge_stripe_customer_id
                   }
                   success
                   errors {
