@@ -242,7 +242,6 @@ export default {
           variables: orderData,
         })
         .then((res) => {
-          console.log(res);
           // Move to the next step
           this.$store.commit(
             "updateRentalCheckoutStep",
@@ -263,21 +262,6 @@ export default {
             stepNumber: "9",
             bikeRentalPlan: this.$store.state.userData.bikeRentalPlan,
           });
-
-          dataLayer.push({
-            event: "Completed Order",
-            amount:
-              Number(this.$store.state.userData.bikeRentalPlan.amount_cents) /
-              100,
-            plan_name: this.$store.state.userData.bikeRentalPlan.name,
-            bikeRentalPlan: this.$store.state.userData.bikeRentalPlan,
-          });
-
-          // Track the charge
-          this.$mixpanel.people.track_charge(
-            this.bikeRentalPlan?.price ||
-              this.$store.state.userData.bikeRentalPlan.price
-          );
 
           // Associate the new user profile with the mixpanel distinct id.
           // This must be called everytime mixpanel.people.* is used.

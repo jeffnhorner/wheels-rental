@@ -14,6 +14,18 @@
             >contact us</a
           >
         </p>
+        <div v-bind:class="$style.btnWrapper">
+          <VBtn
+            v-bind:class="$style.btn"
+            height="5rem"
+            filled
+            outlined
+            rounded
+            v-on:click="goBack"
+          >
+            Go Back
+          </VBtn>
+        </div>
       </div>
       <div v-else>
         <p v-bind:class="$style.prompt">Purchase Confirmation</p>
@@ -49,6 +61,30 @@ export default {
       order_by_pk: null,
     };
   },
+  computed: {
+    successfulOrder() {
+      return this.order_by_pk && this.order_by_pk.status === "subscribed";
+    },
+  },
+  watch: {
+    successfulOrder(success) {
+      if (success) {
+        dataLayer.push({
+          event: "Completed Order",
+          amount:
+            Number(this.$store.state.userData.bikeRentalPlan.amount_cents) /
+            100,
+          plan_name: this.$store.state.userData.bikeRentalPlan.name,
+          bikeRentalPlan: this.$store.state.userData.bikeRentalPlan,
+        });
+
+        // Track the charge
+        this.$mixpanel.people.track_charge(
+          Number(this.$store.state.userData.bikeRentalPlan.amount_cents) / 100
+        );
+      }
+    },
+  },
   apollo: {
     order_by_pk: {
       query: gql`
@@ -64,6 +100,17 @@ export default {
         };
       },
       pollInterval: 500,
+    },
+  },
+  methods: {
+    goBack() {
+      this.$store.commit(
+        "updateRentalCheckoutStep",
+        this.$store.state.rentalCheckoutStep - 2
+      );
+      if (process.isClient) {
+        window.history.replaceState({ step: 9 }, null, "#step=9");
+      }
     },
   },
 };
@@ -100,6 +147,32 @@ p.confirmationMessage {
     align-items: center;
     display: flex;
     flex-direction: column;
+}
+
+.btnWrapper {
+  text-align: center;
+  margin-top: 1rem;
+}
+.btn {
+    border-radius: 50px;
+}
+
+.btn {
+    background-color: #e1b426;
+    border-color: transparent;
+    border-radius: 50px;
+    height: 5rem;
+    margin: 0 auto;
+    font-weight: 700;
+    letter-spacing: -1px;
+    max-width: 24rem;
+    text-transform: initial;
+    width: 100%;
+}
+
+.btn span {
+    color: #fff;
+    font-size: 1.75rem;
 }
 
 @media only screen and (max-width: 1200px) {
