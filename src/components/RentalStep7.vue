@@ -60,7 +60,7 @@
       Unlimed Rides. Charger & lock included.
     </p>
     <p v-bind:class="$style.infoBottom">
-      Wheels will charge you a $99 security deposit. It will be refunded when
+      Wheels will charge you a $25 security deposit. It will be refunded when
       your bike is returned.
     </p>
     <VBtn
